@@ -29,3 +29,7 @@ Wheat Ridge CO 80033 USA
 <mailto:coverclock@diag.com>    
 
 # Abstract
+
+# References
+
+<https://wiki.openstreetmap.org/wiki/Debian/Stretch/FR:Installation>
