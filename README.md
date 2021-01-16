@@ -38,6 +38,8 @@ Wheat Ridge CO 80033 USA
 
 <https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
 
+<https://download.geofabrik.de>
+
 <https://wiki.debian.org/OSM/tileserver/buster> DEPRECATED
 
 <https://wiki.openstreetmap.org/wiki/Debian/Stretch/FR:Installation> DEPRECATED

@@ -58,6 +58,11 @@ Codename:	focal
 $ cat /etc/debian_version
 bullseye/sid
 
+$ uname -a
+Linux ubuntu 5.4.0-1015-raspi #15-Ubuntu SMP Fri Jul 10 05:34:24 UTC 2020 aarch64 aarch64 aarch64 GNU/Linux
+
+DIINUTO
+
 $ vintage
 Arch=""
 Branch="master"
@@ -84,11 +89,6 @@ Toolchain=""
 User="jsloan"
 Vintage="2021-01-15T18:05:26.473281699+0000"
 71.1.4
-
-$ uname -a
-Linux ubuntu 5.4.0-1015-raspi #15-Ubuntu SMP Fri Jul 10 05:34:24 UTC 2020 aarch64 aarch64 aarch64 GNU/Linux
-
-DIINUTO
 
 $ sizeof
 sizeof(char)=1
