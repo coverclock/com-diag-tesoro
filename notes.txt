@@ -1,0 +1,264 @@
+IMAGE
+
+$ xzcat ubuntu-20.04.1-preinstalled-server-arm64+raspi.img.xz | sudo dd bs=4M of=/dev/sdb conv=fsync
+
+$ sudo fdisk -l /dev/sdb
+Disk /dev/sdb: 119.38 GiB, 128177930240 bytes, 250347520 sectors
+Disk model: SDDR-113
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xab86aefd
+
+Device     Boot  Start       End   Sectors   Size Id Type
+/dev/sdb1  *      2048    526335    524288   256M  c W95 FAT32 (LBA)
+/dev/sdb2       526336 250347486 249821151 119.1G 83 Linux
+
+$ sudo mount /dev/sdb1 /mnt; mount | grep sdb1
+/dev/sdb1 on /mnt type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
+
+$ ls /mnt
+bcm2710-rpi-2-b.dtb       cmdline.txt   meta-data        start.elf
+bcm2710-rpi-3-b.dtb       config.txt    network-config   start_x.elf
+bcm2710-rpi-3-b-plus.dtb  fixup4cd.dat  overlay_map.dtb  syscfg.txt
+bcm2710-rpi-cm3.dtb       fixup4.dat    overlays         uboot_rpi_3.bin
+bcm2711-rpi-4-b.dtb       fixup4db.dat  README           uboot_rpi_4.bin
+bcm2837-rpi-3-a-plus.dtb  fixup4x.dat   start4cd.elf     usercfg.txt
+bcm2837-rpi-3-b.dtb       fixup_cd.dat  start4db.elf     user-data
+bcm2837-rpi-3-b-plus.dtb  fixup.dat     start4.elf       vmlinuz
+bcm2837-rpi-cm3-io3.dtb   fixup_db.dat  start4x.elf
+bootcode.bin              fixup_x.dat   start_cd.elf
+boot.scr                  initrd.img    start_db.elf
+
+$ sudo umount /mnt
+
+$ sudo mount /dev/sdb2 /mnt; mount | grep sdb2
+/dev/sdb2 on /mnt type ext4 (rw,relatime)
+
+$ ls /mnt
+bin   dev  home  lost+found  mnt  proc  run   snap  sys  usr
+boot  etc  lib   media       opt  root  sbin  srv   tmp  var
+
+$ df .
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/mmcblk0p2 122949512 2591292 115320548   3% /
+
+$ sudo umount /mnt
+
+BOOT
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.1 LTS
+Release:	20.04
+Codename:	focal
+
+$ cat /etc/debian_version
+bullseye/sid
+
+$ vintage
+Arch=""
+Branch="master"
+Cc="gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0"
+Contact="coverclock@diag.com"
+Copyright="2008-2021 Digital Aggregates Corporation"
+Distro="Ubuntu 20.04.1 LTS focal"
+Homepage="https://github.com/coverclock/com-diag-diminuto"
+Host="ubuntu"
+Kernel="5.4.0-1015-raspi"
+Libc="ldd (Ubuntu GLIBC 2.31-0ubuntu9.1) 2.31"
+License="GNU Lesser General Public License 2.1"
+Make="GNU Make 4.2.1"
+Modified="2021-01-09T23:11:23.000000000+0000"
+Os="linux"
+Platform="glibc"
+Release="71.1.4"
+Repository="https://github.com/coverclock/com-diag-diminuto.git"
+Revision="90a6146c78af2be53b306f742d15335034208f42"
+Root="/home/jsloan/src/com-diag-diminuto"
+Target="host"
+Title="Diminuto"
+Toolchain=""
+User="jsloan"
+Vintage="2021-01-15T18:05:26.473281699+0000"
+71.1.4
+
+$ uname -a
+Linux ubuntu 5.4.0-1015-raspi #15-Ubuntu SMP Fri Jul 10 05:34:24 UTC 2020 aarch64 aarch64 aarch64 GNU/Linux
+
+DIINUTO
+
+$ sizeof
+sizeof(char)=1
+sizeof(char*)=8
+issigned(char)=0
+sizeof(signed char)=1
+sizeof(signed char*)=8
+issigned(signed char)=1
+sizeof(unsigned char)=1
+sizeof(unsigned char*)=8
+issigned(unsigned char)=0
+sizeof('?')=4
+sizeof("STRING")=7
+sizeof(short)=2
+sizeof(short*)=8
+issigned(short)=1
+sizeof(signed short)=2
+sizeof(signed short*)=8
+issigned(signed short)=1
+sizeof(unsigned short)=2
+sizeof(unsigned short*)=8
+issigned(unsigned short)=0
+sizeof(int)=4
+sizeof(int*)=8
+issigned(int)=1
+sizeof(signed int)=4
+sizeof(signed int*)=8
+issigned(signed int)=1
+sizeof(unsigned int)=4
+sizeof(unsigned int*)=8
+issigned(unsigned int)=0
+sizeof(long)=8
+sizeof(long*)=8
+issigned(long)=1
+sizeof(signed long)=8
+sizeof(signed long*)=8
+issigned(signed long)=1
+sizeof(unsigned long)=8
+sizeof(unsigned long*)=8
+issigned(unsigned long)=0
+sizeof(long long)=8
+sizeof(long long*)=8
+issigned(long long)=1
+sizeof(signed long long)=8
+sizeof(signed long long*)=8
+issigned(signed long long)=1
+sizeof(unsigned long long)=8
+sizeof(unsigned long long*)=8
+issigned(unsigned long long)=0
+sizeof(float)=4
+sizeof(float*)=8
+sizeof(double)=8
+sizeof(double*)=8
+sizeof(bool)=1
+sizeof(bool*)=8
+sizeof(enum_t)=4
+sizeof(enum_t*)=8
+issigned(enum_t)=0
+sizeof(bitfield_t)=4
+sizeof(bitfield_t*)=8
+sizeof(int8_t)=1
+sizeof(int8_t*)=8
+issigned(int8_t)=1
+sizeof(uint8_t)=1
+sizeof(uint8_t*)=8
+issigned(uint8_t)=0
+sizeof(int16_t)=2
+sizeof(int16_t*)=8
+issigned(int16_t)=1
+sizeof(uint16_t)=2
+sizeof(uint16_t*)=8
+issigned(uint16_t)=0
+sizeof(int32_t)=4
+sizeof(int32_t*)=8
+issigned(int32_t)=1
+sizeof(uint32_t)=4
+sizeof(uint32_t*)=8
+issigned(uint32_t)=0
+sizeof(int64_t)=8
+sizeof(int64_t*)=8
+issigned(int64_t)=1
+sizeof(uint64_t)=8
+sizeof(uint64_t*)=8
+issigned(uint64_t)=0
+sizeof(intptr_t)=8
+sizeof(intptr_t*)=8
+issigned(intptr_t)=1
+sizeof(uintptr_t)=8
+sizeof(uintptr_t*)=8
+issigned(uintptr_t)=0
+sizeof(wchar_t)=4
+sizeof(wchar_t*)=8
+issigned(wchar_t)=0
+sizeof(wint_t)=4
+sizeof(wint_t*)=8
+issigned(wint_t)=0
+sizeof(size_t)=8
+sizeof(size_t*)=8
+issigned(size_t)=0
+sizeof(ssize_t)=8
+sizeof(ssize_t*)=8
+issigned(ssize_t)=1
+sizeof(pid_t)=4
+sizeof(pid_t*)=8
+issigned(pid_t)=1
+sizeof(time_t)=8
+sizeof(time_t*)=8
+issigned(time_t)=1
+sizeof(dev_t)=8
+sizeof(dev_t*)=8
+issigned(dev_t)=0
+sizeof(ino_t)=8
+sizeof(ino_t*)=8
+issigned(ino_t)=0
+sizeof(mode_t)=4
+sizeof(mode_t*)=8
+issigned(mode_t)=0
+sizeof(nlink_t)=4
+sizeof(nlink_t*)=8
+issigned(nlink_t)=0
+sizeof(uid_t)=4
+sizeof(uid_t*)=8
+issigned(uid_t)=0
+sizeof(gid_t)=4
+sizeof(gid_t*)=8
+issigned(gid_t)=0
+sizeof(off_t)=8
+sizeof(off_t*)=8
+issigned(off_t)=1
+sizeof(blksize_t)=4
+sizeof(blksize_t*)=8
+issigned(blksize_t)=1
+sizeof(blkcnt_t)=8
+sizeof(blkcnt_t*)=8
+issigned(blkcnt_t)=1
+sizeof(pthread_t)=8
+sizeof(pthread_t*)=8
+sizeof(pthread_mutex_t)=48
+sizeof(pthread_mutex_t*)=8
+sizeof(pthread_cond_t)=48
+sizeof(pthread_cond_t*)=8
+sizeof(diminuto_ticks_t)=8
+sizeof(diminuto_ticks_t*)=8
+issigned(diminuto_ticks_t)=0
+sizeof(diminuto_sticks_t)=8
+sizeof(diminuto_sticks_t*)=8
+issigned(diminuto_sticks_t)=1
+sizeof(diminuto_ipv4_t)=4
+sizeof(diminuto_ipv4_t*)=8
+sizeof(diminuto_ipv4_buffer_t)=16
+sizeof(diminuto_ipv4_buffer_t*)=8
+sizeof(diminuto_ipv6_t)=16
+sizeof(diminuto_ipv6_t*)=8
+sizeof(diminuto_ipv6_buffer_t)=40
+sizeof(diminuto_ipv6_buffer_t*)=8
+sizeof(diminuto_port_t)=2
+sizeof(diminuto_port_t*)=8
+issigned(diminuto_port_t)=0
+sizeof(diminuto_local_t)=108
+sizeof(diminuto_local_t*)=8
+sizeof(diminuto_unsigned_t)=8
+sizeof(diminuto_unsigned_t*)=8
+issigned(diminuto_unsigned_t)=0
+sizeof(diminuto_signed_t)=8
+sizeof(diminuto_signed_t*)=8
+issigned(diminuto_signed_t)=1
+sizeof(diminuto_path_t)=4096
+sizeof(diminuto_path_t*)=8
+PATH_MAX=4096
+UNIX_PATH_MAX=108
+MAXPATHLEN=4096
+_POSIX_PATH_MAX=256
+

@@ -32,4 +32,12 @@ Wheat Ridge CO 80033 USA
 
 # References
 
-<https://wiki.openstreetmap.org/wiki/Debian/Stretch/FR:Installation>
+<https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi>
+
+<https://linuxize.com/post/how-to-configure-static-ip-address-on-ubuntu-20-04/>
+
+<https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
+
+<https://wiki.debian.org/OSM/tileserver/buster> DEPRECATED
+
+<https://wiki.openstreetmap.org/wiki/Debian/Stretch/FR:Installation> DEPRECATED
