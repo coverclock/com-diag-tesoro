@@ -262,3 +262,17 @@ UNIX_PATH_MAX=108
 MAXPATHLEN=4096
 _POSIX_PATH_MAX=256
 
+$ timedatectl status
+               Local time: Mon 2021-01-18 08:07:44 MST
+           Universal time: Mon 2021-01-18 15:07:44 UTC
+                 RTC time: n/a
+                Time zone: America/Denver (MST, -0700)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+
+
+$ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html
+
+$ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html#10/40.3663/49.8334
+
