@@ -40,6 +40,4 @@ Wheat Ridge CO 80033 USA
 
 <https://download.geofabrik.de>
 
-<https://wiki.debian.org/OSM/tileserver/buster> DEPRECATED
-
-<https://wiki.openstreetmap.org/wiki/Debian/Stretch/FR:Installation> DEPRECATED
+<https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>

@@ -274,5 +274,18 @@ System clock synchronized: yes
 
 $ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html
 
+$ sudo tail -f /var/log/syslog | grep " TILE "
+Jan 18 15:27:38 tesoro renderd[14881]: DEBUG: START TILE ajt 9 104-111 192-199, new metatile
+Jan 18 15:27:40 tesoro renderd[14881]: DEBUG: START TILE ajt 9 96-103 192-199, new metatile
+Jan 18 15:27:40 tesoro renderd[14881]: DEBUG: START TILE ajt 8 48-55 96-103, new metatile
+Jan 18 15:29:47 tesoro renderd[14881]: DEBUG: DONE TILE ajt 9 104-111 192-199 in 128.698 seconds
+Jan 18 15:29:47 tesoro renderd[14881]: DEBUG: START TILE ajt 7 24-31 48-55, new metatile
+Jan 18 15:29:59 tesoro renderd[14881]: DEBUG: DONE TILE ajt 9 96-103 192-199 in 139.399 seconds
+Jan 18 15:29:59 tesoro renderd[14881]: DEBUG: START TILE ajt 7 24-31 40-47, new metatile
+
 $ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html#10/40.3663/49.8334
 
+http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png
+https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+
+http://tesoro10/39.7942303/-105.1533768.png
