@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://tesoro/tesoro/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="http://tesoro/tesoro/leaflet/1.7.1/leaflet.css" />
     <style>
       html, body {
         height: 100%;
@@ -22,10 +22,10 @@
     <div id="map"></div>
     <script>
       // initialize Leaflet
-      var map = L.map('map').setView({lon: 39.7942303, lat: -105.1533768}, 2);
+      var map = L.map('map', { center: [39.7942303, -105.1533768], zoom: 18});
 
       // add the OpenStreetMap tiles
-      L.tileLayer('http://tesoro/{z}/{x}/{y}.png', {
+      L.tileLayer('http://tesoro/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
       }).addTo(map);
@@ -34,7 +34,7 @@
       L.control.scale().addTo(map);
 
       // show a marker on the map
-      L.marker({lon: 39.7942303, lat: -105.1533768}).bindPopup('Base').addTo(map);
+      L.marker([39.7942303, -105.1533768]).addTo(map).bindPopup("Base");
     </script>
   </body>
 </html>
