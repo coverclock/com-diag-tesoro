@@ -21,6 +21,7 @@
   <body>
     <div id="map"></div>
     <script>
+      // E.G. http://tesoro/tesoro/simple.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=20200903T150049Z
 
       // parse URL
       let url = new URL(document.URL);
@@ -28,9 +29,15 @@
       console.log(url);
       console.log(url.search);
       console.log([...url.searchParams]);
+      let lat = url.searchParams.get("LAT");
+      console.log(lat);
+      let lon = url.searchParams.get("LON");
+      console.log(lon);
+      let lbl = url.searchParams.get("LBL");
+      console.log(lbl);
 
       // initialize Leaflet
-      var map = L.map('map', { center: [39.7942303, -105.1533768], zoom: 18});
+      var map = L.map('map', { center: [lat, lon], zoom: 18});
 
       // add the OpenStreetMap tiles
       L.tileLayer('http://tesoro/hot/{z}/{x}/{y}.png', {
@@ -42,7 +49,7 @@
       L.control.scale().addTo(map);
 
       // show a marker on the map
-      L.marker([39.7942303, -105.1533768]).addTo(map).bindPopup("Base");
+      L.marker([lat, lon]).addTo(map).bindPopup(lbl);
     </script>
   </body>
 </html>
