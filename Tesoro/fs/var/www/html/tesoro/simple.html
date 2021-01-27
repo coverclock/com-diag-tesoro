@@ -21,20 +21,22 @@
   <body>
     <div id="map"></div>
     <script>
-      // E.G. http://tesoro/tesoro/simple.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=20200903T150049Z
+
+      // https://github.com/coverclock/com-diag-tesoro/blob/main/Tesoro/fs/var/www/html/tesoro/simple.html
+      // E.G. http://maps/tesoro/simple.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=20200903T150049Z
 
       // parse URL
       let url = new URL(document.URL);
-      console.log(document.URL);
-      console.log(url);
-      console.log(url.search);
-      console.log([...url.searchParams]);
-      let lat = url.searchParams.get("LAT");
-      console.log(lat);
-      let lon = url.searchParams.get("LON");
-      console.log(lon);
-      let lbl = url.searchParams.get("LBL");
-      console.log(lbl);
+      // console.log(document.URL);
+      // console.log(url);
+      // console.log(url.search);
+      // console.log([...url.searchParams]);
+      var lat = url.searchParams.get("LAT");
+      // console.log(lat);
+      var lon = url.searchParams.get("LON");
+      // console.log(lon);
+      var lbl = url.searchParams.get("LBL");
+      // console.log(lbl);
 
       // initialize Leaflet
       var map = L.map('map', { center: [lat, lon], zoom: 18});
