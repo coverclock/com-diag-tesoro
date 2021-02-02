@@ -27,17 +27,16 @@
       // https://github.com/coverclock/com-diag-tesoro
       // e.g. http://maps/tesoro/tesoro.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=20200903T150049Z
 
-      // Parse URL.
-      console.log(document.URL);
-      let url = new URL(document.URL);
-      console.log(url);
-      console.log(url.search);
-      console.log([ ...url.searchParams ]);
-      let lat = url.searchParams.get('LAT');
+      // Parse JSON.
+      let example = '{ "NAM": "neon", "NUM": 976, "TIM": 1599146223, "LAT": 39.7415175, "LON": -105.1607013, "MSL": 1743.500, "LBL": "20200903T151703Z" }';
+      console.log(example);
+      let record = JSON.parse(example);
+      console.log(record);
+      let lat = record.LAT;
       console.log(lat);
-      let lon = url.searchParams.get('LON');
+      let lon = record.LON;
       console.log(lon);
-      let lbl = url.searchParams.get('LBL');
+      let lbl = record.LBL;
       console.log(lbl);
 
       // Initialize Leaflet.
