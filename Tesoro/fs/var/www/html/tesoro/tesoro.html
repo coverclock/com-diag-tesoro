@@ -19,37 +19,61 @@
     </style>
   </head>
   <body>
+    <div id="dragndrop">* Drag and drop Tesoro observation json file here. *</div>
+    <output id="list" />
     <div id="map"></div>
     <script>
 
       // WORK IN PROGRESS
       // mailto:coverclock@diag.com
       // https://github.com/coverclock/com-diag-tesoro
-      // e.g. http://maps/tesoro/tesoro.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=20200903T150049Z
+      // e.g. http://maps/tesoro/tesoro.html
 
-      // Parse JSON.
-      let example = '{ "NAM": "neon", "NUM": 976, "TIM": 1599146223, "LAT": 39.7415175, "LON": -105.1607013, "MSL": 1743.500, "LBL": "20200903T151703Z" }';
-      console.log(example);
-      let record = JSON.parse(example);
-      console.log(record);
-      let lat = record.LAT;
-      console.log(lat);
-      let lon = record.LON;
-      console.log(lon);
-      let lbl = record.LBL;
-      console.log(lbl);
+      function selectedFile(sothishappened) {
+        sothishappened.stopPropagation();
+        sothishappened.preventDefault();
 
-      // Initialize Leaflet.
-      var map = L.map('map', { center: [ lat, lon ], zoom: 18 });
+        var files = sothishappened.dataTransfer.files;
+	console.log(files);
+	console.log(files[0]);
 
-      // Add the OpenStreetMap tiles.
-      L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
+        let datagram = '{ "NAM": "neon", "NUM": 976, "TIM": 1599146223, "LAT": 39.7415175, "LON": -105.1607013, "MSL": 1743.500, "LBL": "20200903T151703Z" }';
+        console.log(datagram);
+        let record = JSON.parse(datagram);
+        console.log(record);
+        let lat = record.LAT;
+        console.log(lat);
+        let lon = record.LON;
+        console.log(lon);
+        let lbl = record.LBL;
+        console.log(lbl);
 
-      // Show the scale bar on the lower left corner.
-      L.control.scale().addTo(map);
+        // Initialize Leaflet.
+        var map = L.map('map', { center: [ lat, lon ], zoom: 18 });
 
-      // Show a marker on the map.
-      L.marker([ lat, lon ]).addTo(map).bindPopup(lbl);
+        // Add the OpenStreetMap tiles.
+        L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
+
+        // Show the scale bar on the lower left corner.
+        L.control.scale().addTo(map);
+
+        // Show a marker on the map.
+        L.marker([ lat, lon ]).addTo(map).bindPopup(lbl);
+      }
+
+      function draggedOver(sothishappened) {
+        sothishappened.stopPropagation();
+        sothishappened.preventDefault();
+        sothishappened.dataTransfer.dropEffect = 'copy';
+      }
+
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        var dragndrop = document.getElementById('dragndrop');
+        dragndrop.addEventListener('dragover', draggedOver, false);
+        dragndrop.addEventListener('drop', selectedFile, false);
+      } else {
+	console.log('File APIs not supported.');
+      }
 
     </script>
   </body>
