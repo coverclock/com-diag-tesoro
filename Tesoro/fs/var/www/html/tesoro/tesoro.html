@@ -30,10 +30,12 @@
       // e.g. http://maps/tesoro/tesoro.html
 
       var initialized = false;
-      var name = null;
+      var host = null;
       var sequence = 0;
       var epoch = 0;
-      var map;
+      var map = null;
+      var file = null;
+      var timer = null;
 
       function mapper(datagram) {
         console.log(datagram);
@@ -55,12 +57,12 @@
         // Initialize Leaflet.
         if (!initialized) {
           map = L.map('map', { center: [ lat, lon ], zoom: 18 });
-          name = nam;
+          host = nam;
           sequence = num;
           epoch = tim;
           initialized = true;
-        } else if (nam != name) {
-          console.log(name);
+        } else if (nam != host) {
+          console.log(host);
           return;
         } else if (num <= sequence) {
           console.log(sequence);
@@ -69,7 +71,7 @@
           console.log(epoch);
           return;
         } else {
-          name = nam;
+          host = nam;
           sequence = num;
           epoch = tim;
         }
@@ -93,7 +95,6 @@
           }
         })(observation);
         consumer.readAsText(observation);
-        setTimeout(() => { periodic, 5000, observation });
       }
 
       function selector(sothishappened) {
@@ -102,8 +103,10 @@
 
         var files = sothishappened.dataTransfer.files;
         console.log(files);
+	file = files[0];
 
-        periodic(files[0]);
+        periodic(file);
+        timer = setInterval(periodic, 5000, file);
       }
 
       function dragger(sothishappened) {
