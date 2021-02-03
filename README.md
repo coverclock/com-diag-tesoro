@@ -44,6 +44,8 @@ Wheat Ridge CO 80033 USA
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
 
+<https://leafletjs.com>
+
 <https://www.html5rocks.com/en/tutorials/file/dndfiles//>
 
 <https://javascript.info/file>

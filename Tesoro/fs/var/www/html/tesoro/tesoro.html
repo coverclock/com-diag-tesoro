@@ -1,4 +1,8 @@
 <!DOCTYPE HTML>
+<!-- Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA -->
+<!-- Licensed under the terms in LICENSE.txt -->
+<!-- https://github.com/coverclock/com-diag-tesoro -->
+<!-- mailto: mailto:coverclock@diag.com -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,7 +16,6 @@
         margin: 0;
       }
       #map {
-        /* configure the size of the map */
         width: 100%;
         height: 100%;
       }
@@ -24,21 +27,21 @@
     <div id="map"></div>
     <script>
 
-      // WORK IN PROGRESS
-      // mailto:coverclock@diag.com
-      // https://github.com/coverclock/com-diag-tesoro
       // e.g. http://maps/tesoro/tesoro.html
 
-      var initialized = false;
-      var host = null;
-      var sequence = 0;
-      var epoch = 0;
-      var map = null;
-      var file = null;
       var timer = null;
+      var file = null;
+      var host = null;
+      var sequence = null;
+      var epoch = null;
+      var latitude = null;
+      var longitude = null;
+      var map = null;
+      var youarehere = null;
 
-      function mapper(datagram) {
+      function renderer(datagram) {
         console.log(datagram);
+
         let record = JSON.parse(datagram);
         console.log(record);
         let nam = record.NAM;
@@ -54,43 +57,62 @@
         let lbl = record.LBL;
         console.log(lbl);
 
-        // Initialize Leaflet.
-        if (!initialized) {
+        if (map == null) {
+
           map = L.map('map', { center: [ lat, lon ], zoom: 18 });
+          L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
+          L.control.scale().addTo(map);
+          youarehere = L.marker([ lat, lon ]);
+          youarehere.addTo(map).bindPopup(lbl);
+
           host = nam;
           sequence = num;
           epoch = tim;
-          initialized = true;
+          latitude = lat;
+          longitude = lon;
+
         } else if (nam != host) {
+
           console.log(host);
           return;
+
         } else if (num <= sequence) {
+
           console.log(sequence);
           return;
+
         } else if (tim <= epoch) {
+
           console.log(epoch);
           return;
-        } else {
-          host = nam;
+
+        } else if ((lat == longitude) && (lon == longitude)) {
+
+          youarehere.setContent(lbl);
+
           sequence = num;
           epoch = tim;
+
+        } else {
+
+          map.panTo([ lat, lon ]);
+          youarehere.setLatLng([ lat, lon ]);
+          youarehere.setContent(lbl);
+
+          sequence = num;
+          epoch = tim;
+          latitude = lat;
+          longitude = lon;
+
         }
 
-        // Add the OpenStreetMap tiles.
-        L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
-
-        // Show the scale bar on the lower left corner.
-        L.control.scale().addTo(map);
-
-        // Show a marker on the map.
-        L.marker([ lat, lon ]).addTo(map).bindPopup(lbl);
       }
 
       function periodic(observation) {
         var consumer = new FileReader();
         consumer.onload = (function(observation) {
           return function(payload) {
-            mapper(payload.target.result);
+            renderer(payload.target.result);
           }
         })(observation);
         consumer.readAsText(observation);
@@ -102,9 +124,10 @@
 
         var files = sothishappened.dataTransfer.files;
         console.log(files);
-	file = files[0];
-
+        file = files[0];
         console.log(file);
+
+        timer = null;
         periodic(file);
         timer = setInterval(periodic, 5000, file);
       }
@@ -120,7 +143,7 @@
         dragndrop.addEventListener('dragover', dragger, false);
         dragndrop.addEventListener('drop', selector, false);
       } else {
-        console.log('HTML5 file APIs not supported.');
+        console.log('HTML5 file APIs not supported on this platform.');
       }
 
     </script>
