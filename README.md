@@ -42,4 +42,8 @@ Wheat Ridge CO 80033 USA
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
 
+D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
+
 <https://www.html5rocks.com/en/tutorials/file/dndfiles//>
+
+<https://javascript.info/file>

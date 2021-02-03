@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <div id="dragndrop">* Drag and drop Tesoro observation json file here. *</div>
+    <div id="dragndrop">* Drag and drop Tesoro JSON observation file here. *</div>
     <output id="list" />
     <div id="map"></div>
     <script>
@@ -28,12 +28,23 @@
       // mailto:coverclock@diag.com
       // https://github.com/coverclock/com-diag-tesoro
       // e.g. http://maps/tesoro/tesoro.html
-      // this is different.
+
+      var initialized = false;
+      var name = null;
+      var sequence = 0;
+      var epoch = 0;
+      var map;
 
       function mapper(datagram) {
         console.log(datagram);
         let record = JSON.parse(datagram);
         console.log(record);
+        let nam = record.NAM;
+        console.log(nam);
+        let num = record.NUM;
+        console.log(num);
+        let tim = record.TIM;
+        console.log(tim);
         let lat = record.LAT;
         console.log(lat);
         let lon = record.LON;
@@ -42,7 +53,26 @@
         console.log(lbl);
 
         // Initialize Leaflet.
-        var map = L.map('map', { center: [ lat, lon ], zoom: 18 });
+        if (!initialized) {
+          map = L.map('map', { center: [ lat, lon ], zoom: 18 });
+          name = nam;
+          sequence = num;
+          epoch = tim;
+          initialized = true;
+        } else if (nam != name) {
+          console.log(name);
+          return;
+        } else if (num <= sequence) {
+          console.log(sequence);
+          return;
+        } else if (tim <= epoch) {
+          console.log(epoch);
+          return;
+        } else {
+          name = nam;
+          sequence = num;
+          epoch = tim;
+        }
 
         // Add the OpenStreetMap tiles.
         L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
@@ -54,20 +84,26 @@
         L.marker([ lat, lon ]).addTo(map).bindPopup(lbl);
       }
 
+      function periodic(observation) {
+        console.log(observation);
+        var consumer = new FileReader();
+        consumer.onload = (function(observation) {
+          return function(payload) {
+            mapper(payload.target.result);
+          }
+        })(observation);
+        consumer.readAsText(observation);
+        setTimeout(() => { periodic, 5000, observation });
+      }
+
       function selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
 
         var files = sothishappened.dataTransfer.files;
-	console.log(files);
-	console.log(files[0]);
+        console.log(files);
 
-	var consumer = new FileReader();
-	consumer.onload = (function(observation) {
-          return function(payload) { mapper(payload.target.result); }
-        })(files[0]);
-
-	consumer.readAsText(files[0]);
+        periodic(files[0]);
       }
 
       function dragger(sothishappened) {
@@ -81,7 +117,7 @@
         dragndrop.addEventListener('dragover', dragger, false);
         dragndrop.addEventListener('drop', selector, false);
       } else {
-	console.log('HTML5 file APIs not supported.');
+        console.log('HTML5 file APIs not supported.');
       }
 
     </script>
