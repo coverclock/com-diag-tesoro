@@ -3,7 +3,7 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
-<!-- WORK IN PROGRESS -->
+<!-- Renders a continuous moving-map display in real-time or from playback. -->
 <!-- e.g. http://maps/tesoro/tesoro.html -->
 <html lang="en">
   <head>
@@ -24,20 +24,21 @@
     </style>
   </head>
   <body>
-    <div id="dragndrop">* Drag and drop Tesoro JSON observation file here. *</div>
+    <div id="dragndrop">The <b>X</b> marks the spot.</div>
     <output id="list" />
     <div id="map"></div>
     <script>
 
-      var timer = null;
-      var file = null;
-      var host = null;
-      var sequence = null;
-      var epoch = null;
-      var latitude = null;
-      var longitude = null;
-      var map = null;
-      var youarehere = null;
+      let timer = null;
+      let file = null;
+      let host = null;
+      let sequence = null;
+      let epoch = null;
+      let latitude = null;
+      let longitude = null;
+      let map = null;
+      let youarehere = null;
+      const PERIOD = 1000;
 
       function renderer(datagram) {
         console.log(datagram);
@@ -88,7 +89,7 @@
 
         } else if ((lat == longitude) && (lon == longitude)) {
 
-          youarehere.setContent(lbl);
+          youarehere.setContent(lbl).openOn(map);
 
           sequence = num;
           epoch = tim;
@@ -96,8 +97,7 @@
         } else {
 
           map.panTo([ lat, lon ]);
-          youarehere.setLatLng([ lat, lon ]);
-          youarehere.setContent(lbl);
+          youarehere.setLatLng([ lat, lon ]).setContent(lbl).openOn(map);
 
           sequence = num;
           epoch = tim;
@@ -109,7 +109,7 @@
       }
 
       function periodic(observation) {
-        var consumer = new FileReader();
+        let consumer = new FileReader();
         consumer.onload = (function(observation) {
           return function(payload) {
             renderer(payload.target.result);
@@ -122,14 +122,14 @@
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
 
-        var files = sothishappened.dataTransfer.files;
+        let files = sothishappened.dataTransfer.files;
         console.log(files);
         file = files[0];
         console.log(file);
 
         timer = null;
         periodic(file);
-        timer = setInterval(periodic, 5000, file);
+        timer = setInterval(periodic, PERIOD, file);
       }
 
       function dragger(sothishappened) {
@@ -139,7 +139,7 @@
       }
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var dragndrop = document.getElementById('dragndrop');
+        let dragndrop = document.getElementById('dragndrop');
         dragndrop.addEventListener('dragover', dragger, false);
         dragndrop.addEventListener('drop', selector, false);
       } else {

@@ -32,11 +32,11 @@ Wheat Ridge CO 80033 USA
 
 # Examples
 
-    http://maps/tesoro/base.html
+<http://maps/tesoro/base.html>
 
-    http://maps/tesoro/query.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z
+<http://maps/tesoro/query.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z>
 
-    http://maps/tesoro/tesoro.html
+<http://maps/tesoro/tesoro.html>
 
 # Repositories
 
