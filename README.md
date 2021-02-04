@@ -1,7 +1,7 @@
 com-diag-tesoro
 ==============
 
-Musings with Open Street Maps (OSM)
+Musings with Open Street Maps (OSM).
 
 # Copyright
 
@@ -30,7 +30,23 @@ Wheat Ridge CO 80033 USA
 
 # Abstract
 
-# References
+# Examples
+
+    http://maps/tesoro/base.html
+
+    http://maps/tesoro/query.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z
+
+    http://maps/tesoro/tesoro.html
+
+# Repositories
+
+<https://github.com/coverclock/com-diag-tesoro>
+
+<https://github.com/coverclock/com-diag-hazer>
+
+<https://github.com/coverclock/com-diag-diminuto>
+
+# Resources
 
 <https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi>
 
@@ -42,10 +58,12 @@ Wheat Ridge CO 80033 USA
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
 
-D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
-
 <https://leafletjs.com>
 
 <https://www.html5rocks.com/en/tutorials/file/dndfiles//>
 
 <https://javascript.info/file>
+
+# References
+
+D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
