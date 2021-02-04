@@ -271,6 +271,7 @@ System clock synchronized: yes
               NTP service: active
           RTC in local TZ: no
 
+$ sudo apt-get install fonts-noto-color-emoji
 
 $ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html
 
