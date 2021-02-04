@@ -3,6 +3,8 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
+<!-- Renders a map of the Tumbleweed base station coordinates. -->
+<!-- e.g. http://maps/tesoro/base.html -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -26,24 +28,17 @@
     <div id="map"></div>
     <script>
 
-      // mailto:coverclock@diag.com
-      // https://github.com/coverclock/com-diag-tesoro
-      // e.g. http://maps/tesoro/base.html
-
-      // initialize Leaflet
       var map = L.map('map', { center: [39.7942303, -105.1533768], zoom: 18});
 
-      // add the OpenStreetMap tiles
       L.tileLayer('http://tesoro/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
       }).addTo(map);
 
-      // show the scale bar on the lower left corner
       L.control.scale().addTo(map);
 
-      // show a marker on the map
       L.marker([39.7942303, -105.1533768]).addTo(map).bindPopup("Base");
+
     </script>
   </body>
 </html>

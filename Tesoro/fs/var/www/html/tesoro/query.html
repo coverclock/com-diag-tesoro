@@ -3,6 +3,8 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
+<!-- Renders a map using information from the URL query parameters. -->
+<!-- e.g. http://maps/tesoro/query.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -26,11 +28,6 @@
     <div id="map"></div>
     <script>
 
-      // mailto:coverclock@diag.com
-      // https://github.com/coverclock/com-diag-tesoro
-      // e.g. http://maps/tesoro/query.html?TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z
-
-      // parse URL
       let url = new URL(document.URL);
       console.log(document.URL);
       console.log(url);
@@ -43,19 +40,15 @@
       let lbl = url.searchParams.get("LBL");
       console.log(lbl);
 
-      // initialize Leaflet
       var map = L.map('map', { center: [lat, lon], zoom: 18});
 
-      // add the OpenStreetMap tiles
       L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
       }).addTo(map);
 
-      // show the scale bar on the lower left corner
       L.control.scale().addTo(map);
 
-      // show a marker on the map
       L.marker([lat, lon]).addTo(map).bindPopup(lbl);
 
     </script>
