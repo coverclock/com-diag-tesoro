@@ -54,7 +54,7 @@ base station coordinates.
 
 The query script takes a URL query containing a latitude and longitude,
 in decimal degrees, and a label, and renders a map centered at those
-coordinates:
+coordinates.
 
 <http://maps/tesoro/query.html?LAT=39.7943071&LON=-105.1533805&MSL=1710.300&LBL=2020-09-03T15:00:49Z>
 
