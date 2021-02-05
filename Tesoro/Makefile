@@ -9,6 +9,7 @@
 PROJECT	:=	tesoro
 TMPDIR	:=	/tmp
 ROOT	:=	/var/www/html/tesoro
+SOURCE	:=	src
 VERSION	:=	v1.7.1
 BASE	:=	${ROOT}/leaflet/${VERSION}
 OWNER	:=	${USER}
@@ -32,11 +33,11 @@ ${BASE}:
 	sudo mkdir -p ${BASE}
 	sudo chown -R ${OWNER}:${OWNER} ${ROOT}
 
-${ROOT}/base.html:	fs${ROOT}/base.html ${BASE}
+${ROOT}/base.html:	${SOURCE}/base.html ${BASE}
 	cp -i $< $@
 
-${ROOT}/query.html:	fs${ROOT}/query.html ${BASE}
+${ROOT}/query.html:	${SOURCE}/query.html ${BASE}
 	cp -i $< $@
 
-${ROOT}/draganddrop.html:	fs${ROOT}/draganddrop.html ${BASE}
+${ROOT}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
 	cp -i $< $@
