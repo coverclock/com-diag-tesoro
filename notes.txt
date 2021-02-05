@@ -287,3 +287,8 @@ Jan 18 15:29:59 tesoro renderd[14881]: DEBUG: START TILE ajt 7 24-31 40-47, new 
 $ firefox file:///home/osm/src/mod_tile/extra/sample_leaflet.html#10/40.3663/49.8334
 
 http://tesoro/leaflet.html#10/39.7942303/-105.1533768.png
+
+$ sudo apt-get install kazam
+
+$ kazam --nosound
+
