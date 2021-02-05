@@ -58,8 +58,13 @@ coordinates.
 
 <http://maps/tesoro/query.html?LAT=39.7943071&LON=-105.1533805>
 
-The draganddrop script renders a moving map display in real-time from data
-collected using Hazer and fed to it via the Diminuto observation feature.
+The draganddrop script renders a moving map display from data
+collected using Hazer and fed to it via the Diminuto observation
+feature via an initial drag-and-drop of the observation file. A marker
+shows the target being tracked, and the map pans to keep the marker
+centered. Clicking on the marker shows the time in UTC at which the
+position was determined. This can be done in real-time or by playing
+back a CSV file collected in the past.
 
 <http://maps/tesoro/draganddrop.html>
 
