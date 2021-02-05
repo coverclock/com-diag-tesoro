@@ -31,8 +31,8 @@
 
       const DELAY = 1000;
       const MODULO = 60;
+      let observation = null;
       let timer = null;
-      let file = null;
       let host = null;
       let sequence = null;
       let epoch = null;
@@ -149,26 +149,24 @@
 
       }
 
-      function periodic(observation) {
+      function periodic() {
         let consumer = new FileReader();
-        consumer.onload = (function(observation) {
-          return function(payload) {
-            renderer(payload.target.result);
-          }
-        })(observation);
+        consumer.onload = function(sothishappened) {
+          renderer(sothishappened.target.result);
+        };
         consumer.readAsText(observation);
 	timer = null;
-        timer = setTimeout(periodic, DELAY, observation);
+        timer = setTimeout(periodic, DELAY);
       }
 
       function selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
-        let files = sothishappened.dataTransfer.files;
-        file = files[0];
+        let list = sothishappened.dataTransfer.files;
+        observation = list[0];
         console.log('Selecting');
-        console.log('File ' + file.name);
-        periodic(file);
+        console.log('File ' + observation.name);
+        periodic();
       }
 
       function dragger(sothishappened) {
