@@ -34,10 +34,10 @@ ${BASE}:
 	sudo chown -R ${OWNER}:${OWNER} ${ROOT}
 
 ${ROOT}/base.html:	${SOURCE}/base.html ${BASE}
-	cp -i $< $@
+	cp $< $@
 
 ${ROOT}/query.html:	${SOURCE}/query.html ${BASE}
-	cp -i $< $@
+	cp $< $@
 
 ${ROOT}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
-	cp -i $< $@
+	cp $< $@

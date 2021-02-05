@@ -89,7 +89,7 @@
 
         } else if ((lat == longitude) && (lon == longitude)) {
 
-          youarehere.setContent(lbl).openOn(map);
+          youarehere.setPopupContent(lbl);
 
           sequence = num;
           epoch = tim;
@@ -97,7 +97,7 @@
         } else {
 
           map.panTo([ lat, lon ]);
-          youarehere.setLatLng([ lat, lon ]).setContent(lbl).openOn(map);
+          youarehere.setLatLng([ lat, lon ]).setPopupContent(lbl);
 
           sequence = num;
           epoch = tim;

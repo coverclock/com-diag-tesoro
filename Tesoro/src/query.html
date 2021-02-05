@@ -38,6 +38,7 @@
       let lon = url.searchParams.get("LON");
       console.log(lon);
       let lbl = url.searchParams.get("LBL");
+      if (lbl == null) { lbl = 'No label specified'; }
       console.log(lbl);
 
       var map = L.map('map', { center: [lat, lon], zoom: 18});
