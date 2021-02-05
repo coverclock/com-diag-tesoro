@@ -29,6 +29,8 @@
     <div id="map"></div>
     <script>
 
+      const DELAY = 1000;
+      const MODULO = 60;
       let timer = null;
       let file = null;
       let host = null;
@@ -38,25 +40,23 @@
       let longitude = null;
       let map = null;
       let youarehere = null;
-      const PERIOD = 1000;
+      let iamdoingthis = null;
+      const INITIALIZING = 'i';
+      const HOSTING = 'h';
+      const SEQUENCING = 'n';
+      const EPOCHING = 'e';
+      const STATIONARY = 's';
+      const MOVING = 'm';
 
       function renderer(datagram) {
-        console.log(datagram);
 
         let record = JSON.parse(datagram);
-        console.log(record);
         let nam = record.NAM;
-        console.log(nam);
         let num = record.NUM;
-        console.log(num);
         let tim = record.TIM;
-        console.log(tim);
         let lat = record.LAT;
-        console.log(lat);
         let lon = record.LON;
-        console.log(lon);
         let lbl = record.LBL;
-        console.log(lbl);
 
         if (map == null) {
 
@@ -72,27 +72,60 @@
           latitude = lat;
           longitude = lon;
 
+          console.log('Starting');
+          console.log('Sequence ' + sequence);
+          console.log('Host ' + host);
+          console.log('Epoch ' + epoch);
+          console.log('Latitude ' + latitude);
+          console.log('Longitude ' + longitude);
+          iamdoingthis = INITIALIZING;
+
         } else if (nam != host) {
 
-          console.log(host);
+          if (iamdoingthis != HOSTING) {
+            console.log('Error');
+            console.log('Sequence ' + sequence);
+            console.log('Host ' + host);
+            console.log('NAM ' + nam);
+            iamdoingthis = HOSTING;
+          }
           return;
 
         } else if (num <= sequence) {
 
-          console.log(sequence);
+          if (iamdoingthis != SEQUENCING) {
+            console.log('Error');
+            console.log('Sequence ' + sequence);
+            console.log('NUM ' + num);
+            iamdoingthis = SEQUENCING;
+          }
           return;
 
         } else if (tim <= epoch) {
 
-          console.log(epoch);
+          if (iamdoingthis != EPOCHING) {
+            console.log('Error');
+            console.log('Sequence ' + sequence);
+            console.log('Epoch ' + epoch);
+            console.log('TIM ' + tim);
+            iamdoingthis = EPOCHING;
+          }
           return;
 
-        } else if ((lat == longitude) && (lon == longitude)) {
+        } else if ((lat == latitude) && (lon == longitude)) {
 
           youarehere.setPopupContent(lbl);
 
           sequence = num;
           epoch = tim;
+
+          if ((iamdoingthis != STATIONARY) || ((sequence % MODULO) == 0)) {
+            console.log('Stationary');
+            console.log('Sequence ' + sequence);
+            console.log('Latitude ' + latitude);
+            console.log('Longitude ' + longitude);
+            iamdoingthis = STATIONARY;
+          }
 
         } else {
 
@@ -103,6 +136,14 @@
           epoch = tim;
           latitude = lat;
           longitude = lon;
+
+          if ((iamdoingthis != MOVING) || ((sequence % MODULO) == 0)) {
+            console.log('Moving');
+            console.log('Sequence ' + sequence);
+            console.log('Latitude ' + latitude);
+            console.log('Longitude ' + longitude);
+            iamdoingthis = MOVING;
+          }
 
         }
 
@@ -116,20 +157,18 @@
           }
         })(observation);
         consumer.readAsText(observation);
+	timer = null;
+        timer = setTimeout(periodic, DELAY, observation);
       }
 
       function selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
-
         let files = sothishappened.dataTransfer.files;
-        console.log(files);
         file = files[0];
-        console.log(file);
-
-        timer = null;
+        console.log('Selecting');
+        console.log('File ' + file.name);
         periodic(file);
-        timer = setInterval(periodic, PERIOD, file);
       }
 
       function dragger(sothishappened) {

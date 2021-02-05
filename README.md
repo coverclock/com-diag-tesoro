@@ -43,28 +43,31 @@ infrastructure for both Hazer and Tesoro.
 
 # Examples
 
-In the examples below, the "maps" HTTP server is a Raspberry Pi 4B
+In the examples below, "maps" is a OSM tile server on a Raspberry Pi 4B
 running behind my firewall and running OpenStreetMaps, currently with
 the database and map data for North America.
 
-The base script renders a static map centered on my Differential GNSS
-base station coordinates.
+The base page renders a static map centered the coordinates of my
+Differential GNSS base station coordinates. This is a quick way to tell
+of the tile server is working from any computer on the same network.
 
 <http://maps/tesoro/base.html>
 
-The query script takes a URL query containing a latitude and longitude,
+The query page takes a query URL containing a latitude and longitude,
 in decimal degrees, and a label, and renders a map centered at those
-coordinates.
+coordinates. This is an easy way to view a static map from any computer
+on the same network.
 
 <http://maps/tesoro/query.html?LAT=39.7943071&LON=-105.1533805>
 
-The draganddrop script renders a moving map display from data
+The draganddrop page renders a dynamic moving map display from data
 collected using Hazer and fed to it via the Diminuto observation
 feature via an initial drag-and-drop of the observation file. A marker
 shows the target being tracked, and the map pans to keep the marker
 centered. Clicking on the marker shows the time in UTC at which the
-position was determined. This can be done in real-time or by playing
-back a CSV file collected in the past.
+position was determined. This can be done in real-time or by playing back
+a CSV file collected in the past. (The fun/tesoroplayback.sh script in
+the Hazer repository is an example of the latter.)
 
 <http://maps/tesoro/draganddrop.html>
 

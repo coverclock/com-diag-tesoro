@@ -18,16 +18,18 @@ LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
-.PHONY:	install leaflet
+.PHONY:	install leaflet show
 
 install:	${BASE} ${FILES}
-	ls -lR ${ROOT}
 
 leaflet:	${BASE}
 	T=`mktemp "$(TMPDIR)/$(ARCHIVE)-XXXXXXXXXX"`; \
 	wget -O $$T ${LINK}; \
 	unzip -d ${BASE} $$T; \
 	rm $$T
+
+show:
+	ls -lR ${ROOT}
 
 ${BASE}:
 	sudo mkdir -p ${BASE}
