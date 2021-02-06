@@ -103,6 +103,10 @@ the Hazer repository is an example of the latter.)
 
 <https://javascript.info/file>
 
+<https://www.sitepoint.com/javascript-execution-browser-limits/>
+
+<https://support.mozilla.org/en-US/kb/warning-unresponsive-script>
+
 # Resources
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
