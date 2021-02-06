@@ -71,6 +71,25 @@ the Hazer repository is an example of the latter.)
 
 <http://maps/tesoro/draganddrop.html>
 
+# Turning the safeties off Firefox (DANGEROUS)
+
+1. Enter "about:config" on browser URL bar.
+2. Click "Accept the Risk and Continue".
+3. Click "Show All".
+4. Scroll to "dom.max_script_runtime".
+* Click pencil icon.
+* Enter "86400" (or whatever).
+* Click on checkmark icon.
+5. Repeat for "dom.max_script_runtime_without_important_user_imput".
+6. Repeat for "dom.max_ext_content_script_run_time".
+7. Quit and restart Firefox.
+
+# Capturing Video
+
+    $ sudo apt-get install kazam
+
+    $ kazam --nosound
+
 # Videos
 
 <https://youtu.be/SUQuxQnq9yk>
