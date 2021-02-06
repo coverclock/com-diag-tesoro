@@ -8,9 +8,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <script src="http://maps/tesoro/leaflet/v1.7.1/leaflet.js"></script>
-    <link rel="stylesheet" href="http://maps/tesoro/leaflet/v1.7.1/leaflet.css" />
+    <link rel="stylesheet" href="http://maps/tesoro/leaflet/v1.7.1/leaflet.css"></link>
     <style>
       html, body {
         height: 100%;
@@ -24,22 +24,30 @@
     </style>
   </head>
   <body>
-    <div id="dragndrop">The <b>X</b> marks the spot.</div>
+    <div id="dragndrop"><b>X</b> marks the spot!</div>
     <output id="list" />
     <div id="map"></div>
     <script>
 
       const DELAY = 1000;
       const MODULO = 60;
-      let observation = null;
-      let timer = null;
+
       let host = null;
       let sequence = null;
       let epoch = null;
       let latitude = null;
       let longitude = null;
+      let meansealevel = null;
+      let label = null;
+
+      function dump() {
+        console.log('Last ' + host + ' ' + sequence + ' ' + epoch + ' ' + latitude + ' ' + longitude + ' ' + meansealevel + ' ' + label);
+      }
+
       let map = null;
+
       let youarehere = null;
+
       let iamdoingthis = null;
       const INITIALIZING = 'i';
       const HOSTING = 'h';
@@ -50,12 +58,22 @@
 
       function renderer(datagram) {
 
-        let record = JSON.parse(datagram);
+        let record = null;
+        try {
+          record = JSON.parse(datagram);
+        } catch(except) {
+          console.log('Error');
+          console.log('Datagram ' + datagram);
+          console.log(except);
+          return;
+        }
+
         let nam = record.NAM;
         let num = record.NUM;
         let tim = record.TIM;
         let lat = record.LAT;
         let lon = record.LON;
+        let msl = record.MSL;
         let lbl = record.LBL;
 
         if (map == null) {
@@ -71,22 +89,19 @@
           epoch = tim;
           latitude = lat;
           longitude = lon;
+          meansealevel = msl;
+          label = lbl;
 
           console.log('Starting');
-          console.log('Sequence ' + sequence);
-          console.log('Host ' + host);
-          console.log('Epoch ' + epoch);
-          console.log('Latitude ' + latitude);
-          console.log('Longitude ' + longitude);
+          dump();
           iamdoingthis = INITIALIZING;
 
         } else if (nam != host) {
 
           if (iamdoingthis != HOSTING) {
             console.log('Error');
-            console.log('Sequence ' + sequence);
-            console.log('Host ' + host);
             console.log('NAM ' + nam);
+            dump();
             iamdoingthis = HOSTING;
           }
           return;
@@ -95,8 +110,8 @@
 
           if (iamdoingthis != SEQUENCING) {
             console.log('Error');
-            console.log('Sequence ' + sequence);
             console.log('NUM ' + num);
+            dump();
             iamdoingthis = SEQUENCING;
           }
           return;
@@ -105,9 +120,8 @@
 
           if (iamdoingthis != EPOCHING) {
             console.log('Error');
-            console.log('Sequence ' + sequence);
-            console.log('Epoch ' + epoch);
             console.log('TIM ' + tim);
+            dump();
             iamdoingthis = EPOCHING;
           }
           return;
@@ -118,12 +132,12 @@
 
           sequence = num;
           epoch = tim;
+          meansealevel = msl;
+          label = lbl;
 
           if ((iamdoingthis != STATIONARY) || ((sequence % MODULO) == 0)) {
             console.log('Stationary');
-            console.log('Sequence ' + sequence);
-            console.log('Latitude ' + latitude);
-            console.log('Longitude ' + longitude);
+            dump();
             iamdoingthis = STATIONARY;
           }
 
@@ -136,12 +150,12 @@
           epoch = tim;
           latitude = lat;
           longitude = lon;
+          meansealevel = msl;
+          label = lbl;
 
           if ((iamdoingthis != MOVING) || ((sequence % MODULO) == 0)) {
             console.log('Moving');
-            console.log('Sequence ' + sequence);
-            console.log('Latitude ' + latitude);
-            console.log('Longitude ' + longitude);
+            dump();
             iamdoingthis = MOVING;
           }
 
@@ -149,14 +163,19 @@
 
       }
 
-      function periodic() {
+      let timer = null;
+
+      function periodic(observation) {
+        //console.log(observation);
         let consumer = new FileReader();
         consumer.onload = function(sothishappened) {
-          renderer(sothishappened.target.result);
+          let datagram = sothishappened.target.result;
+          //console.log(datagram);
+          renderer(datagram);
         };
         consumer.readAsText(observation);
-	timer = null;
-        timer = setTimeout(periodic, DELAY);
+        timer = null;
+        timer = setTimeout(periodic, DELAY, observation);
       }
 
       function selector(sothishappened) {
@@ -166,7 +185,7 @@
         observation = list[0];
         console.log('Selecting');
         console.log('File ' + observation.name);
-        periodic();
+        periodic(observation);
       }
 
       function dragger(sothishappened) {
