@@ -292,3 +292,20 @@ $ sudo apt-get install kazam
 
 $ kazam --nosound
 
+$ firefox
+1. Enter "about:config" on browser URL bar.
+2. Click "Accept the Risk and Continue".
+3. Click "Show All".
+4. Scroll to "dom.max_script_runtime".
+4.1 Click pencil icon.
+4.2 Enter "86400" (or whatever).
+4.3 Click on checkmark icon.
+4. Scroll to "dom.max_script_runtime_without_important_user_imput".
+4.1 Click pencil icon.
+4.2 Enter "86400" (or whatever).
+4.3 Click on checkmark icon.
+4. Scroll to "dom.max_ext_content_script_run_time".
+4.1 Click pencil icon.
+4.2 Enter "86400" (or whatever).
+4.3 Click on checkmark icon.
+5. Quit and restart Firefox.

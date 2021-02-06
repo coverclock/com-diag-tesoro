@@ -40,8 +40,8 @@
       let meansealevel = null;
       let label = null;
 
-      function dump() {
-        console.log('Last ' + host + ' ' + sequence + ' ' + epoch + ' ' + latitude + ' ' + longitude + ' ' + meansealevel + ' ' + label);
+      function dump(name) {
+        console.log(name + ' ' +  host + ' ' + sequence + ' ' + epoch + ' ' + latitude + ' ' + longitude + ' ' + meansealevel + ' ' + label);
       }
 
       let map = null;
@@ -62,7 +62,6 @@
         try {
           record = JSON.parse(datagram);
         } catch(except) {
-          console.log('Error');
           console.log('Datagram ' + datagram);
           console.log(except);
           return;
@@ -92,16 +91,14 @@
           meansealevel = msl;
           label = lbl;
 
-          console.log('Starting');
-          dump();
+          dump('Starting');
           iamdoingthis = INITIALIZING;
 
         } else if (nam != host) {
 
           if (iamdoingthis != HOSTING) {
-            console.log('Error');
+            dump('Host');
             console.log('NAM ' + nam);
-            dump();
             iamdoingthis = HOSTING;
           }
           return;
@@ -109,9 +106,8 @@
         } else if (num <= sequence) {
 
           if (iamdoingthis != SEQUENCING) {
-            console.log('Error');
+            dump('Sequence');
             console.log('NUM ' + num);
-            dump();
             iamdoingthis = SEQUENCING;
           }
           return;
@@ -119,9 +115,8 @@
         } else if (tim <= epoch) {
 
           if (iamdoingthis != EPOCHING) {
-            console.log('Error');
+            dump('Epoch');
             console.log('TIM ' + tim);
-            dump();
             iamdoingthis = EPOCHING;
           }
           return;
@@ -136,8 +131,7 @@
           label = lbl;
 
           if ((iamdoingthis != STATIONARY) || ((sequence % MODULO) == 0)) {
-            console.log('Stationary');
-            dump();
+            dump('Stationary');
             iamdoingthis = STATIONARY;
           }
 
@@ -154,8 +148,7 @@
           label = lbl;
 
           if ((iamdoingthis != MOVING) || ((sequence % MODULO) == 0)) {
-            console.log('Moving');
-            dump();
+            dump('Moving');
             iamdoingthis = MOVING;
           }
 
@@ -183,8 +176,7 @@
         sothishappened.preventDefault();
         let list = sothishappened.dataTransfer.files;
         observation = list[0];
-        console.log('Selecting');
-        console.log('File ' + observation.name);
+        console.log('Selecting ' + observation.name);
         periodic(observation);
       }
 
