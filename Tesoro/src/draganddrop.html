@@ -101,7 +101,6 @@
             console.log('NAM ' + nam);
             iamdoingthis = HOSTING;
           }
-          return;
 
         } else if (num <= sequence) {
 
@@ -110,7 +109,6 @@
             console.log('NUM ' + num);
             iamdoingthis = SEQUENCING;
           }
-          return;
 
         } else if (tim <= epoch) {
 
@@ -119,7 +117,6 @@
             console.log('TIM ' + tim);
             iamdoingthis = EPOCHING;
           }
-          return;
 
         } else if ((lat == latitude) && (lon == longitude)) {
 
@@ -159,11 +156,9 @@
       let timer = null;
 
       function periodic(observation) {
-        //console.log(observation);
         let consumer = new FileReader();
         consumer.onload = function(sothishappened) {
           let datagram = sothishappened.target.result;
-          //console.log(datagram);
           renderer(datagram);
         };
         consumer.readAsText(observation);
