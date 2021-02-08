@@ -76,19 +76,27 @@ the Hazer repository is an example of the latter.)
 1. Enter "about:config" on browser URL bar.
 2. Click "Accept the Risk and Continue".
 3. Click "Show All".
-4. Scroll to "dom.max_script_runtime".
-* Click pencil icon.
-* Enter "86400" (or whatever).
-* Click on checkmark icon.
-5. Repeat for "dom.max_script_runtime_without_important_user_imput".
-6. Repeat for "dom.max_ext_content_script_run_time".
-7. Quit and restart Firefox.
+4. Enter "dom.max_script_runtime" into search box and hit return.
+5. Click pencil icon for "dom.max_script_runtime".
+6. Enter "86400" (or whatever) for "dom.max_script_runtime".
+7. Click checkmark icon for "dom.max_script_runtime".
+8. Repeat for "dom.max_script_runtime_without_important_user_imput".
+9. Repeat for "dom.max_ext_content_script_run_time".
+10. Quit and restart Firefox.
 
 # Capturing Video
 
+I've been using kazam, a Python 3-based screen capture utility.
+
     $ sudo apt-get install kazam
 
+It works from a menu on my x86_64 Ubuntu systems. But on the Raspberry
+Pi, I had to start it from the command line with an option to indicate
+there is no sound hardware.
+
     $ kazam --nosound
+
+(More about necessary kazam options to come.)
 
 # Videos
 
@@ -125,6 +133,10 @@ the Hazer repository is an example of the latter.)
 <https://www.sitepoint.com/javascript-execution-browser-limits/>
 
 <https://support.mozilla.org/en-US/kb/warning-unresponsive-script>
+
+<https://developer.mozilla.org/en-US/docs/Web>
+
+<https://www.w3.org/TR/FileAPI/>
 
 # Resources
 

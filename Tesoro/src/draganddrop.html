@@ -40,7 +40,7 @@
       let meansealevel = null;
       let label = null;
 
-      function dump(name) {
+      function report(name) {
         console.log(name + ' ' +  host + ' ' + sequence + ' ' + epoch + ' ' + latitude + ' ' + longitude + ' ' + meansealevel + ' ' + label);
       }
 
@@ -61,9 +61,9 @@
         let record = null;
         try {
           record = JSON.parse(datagram);
-        } catch(except) {
-          console.log('Datagram ' + datagram);
-          console.log(except);
+        } catch(error) {
+          console.log('Parsing ' + error);
+          console.log(datagram);
           return;
         }
 
@@ -91,29 +91,29 @@
           meansealevel = msl;
           label = lbl;
 
-          dump('Starting');
+          report('Starting');
           iamdoingthis = INITIALIZING;
 
         } else if (nam != host) {
 
-          if (iamdoingthis != HOSTING) {
-            dump('Host');
+          if ((iamdoingthis != HOSTING) || ((sequence % MODULO) == 0)) {
+            report('Host');
             console.log('NAM ' + nam);
             iamdoingthis = HOSTING;
           }
 
         } else if (num <= sequence) {
 
-          if (iamdoingthis != SEQUENCING) {
-            dump('Sequence');
+          if ((iamdoingthis != SEQUENCING) || ((sequence % MODULO) == 0)) {
+            report('Sequence');
             console.log('NUM ' + num);
             iamdoingthis = SEQUENCING;
           }
 
         } else if (tim <= epoch) {
 
-          if (iamdoingthis != EPOCHING) {
-            dump('Epoch');
+          if ((iamdoingthis != EPOCHING) || ((sequence % MODULO) == 0)) {
+            report('Epoch');
             console.log('TIM ' + tim);
             iamdoingthis = EPOCHING;
           }
@@ -128,7 +128,7 @@
           label = lbl;
 
           if ((iamdoingthis != STATIONARY) || ((sequence % MODULO) == 0)) {
-            dump('Stationary');
+            report('Stationary');
             iamdoingthis = STATIONARY;
           }
 
@@ -145,13 +145,15 @@
           label = lbl;
 
           if ((iamdoingthis != MOVING) || ((sequence % MODULO) == 0)) {
-            dump('Moving');
+            report('Moving');
             iamdoingthis = MOVING;
           }
 
         }
 
       }
+
+      let observation = null;
 
       let timer = null;
 
@@ -160,19 +162,34 @@
         consumer.onload = function(sothishappened) {
           let datagram = sothishappened.target.result;
           renderer(datagram);
+          timer = setTimeout(periodic, DELAY, observation);
         };
+        consumer.onerror = function(sothishappened) {
+          console.log('Reading ' + consumer.error);
+          consumer.abort();
+        }
+        consumer.onabort = function(sothishappened) {
+          console.log('Aborting');
+        }
         consumer.readAsText(observation);
-        timer = null;
-        timer = setTimeout(periodic, DELAY, observation);
+      }
+
+      function process(observation) {
+        try {
+          if (timer != null) { clearTimeout(timer); }
+          periodic(observation);
+        } catch (error) {
+          console.log('Processing ' + error);
+        }
       }
 
       function selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
         let list = sothishappened.dataTransfer.files;
-        observation = list[0];
+        let observation = list[0];
         console.log('Selecting ' + observation.name);
-        periodic(observation);
+        process(observation);
       }
 
       function dragger(sothishappened) {
