@@ -13,7 +13,7 @@ SOURCE	:=	src
 VERSION	:=	v1.7.1
 BASE	:=	${ROOT}/leaflet/${VERSION}
 OWNER	:=	${USER}
-FILES	:=	${ROOT}/base.html ${ROOT}/query.html ${ROOT}/draganddrop.html
+FILES	:=	${ROOT}/base.html ${ROOT}/query.html ${ROOT}/draganddrop.html ${ROOT}/movingmap.js
 LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
@@ -42,4 +42,7 @@ ${ROOT}/query.html:	${SOURCE}/query.html ${BASE}
 	cp $< $@
 
 ${ROOT}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
+	cp $< $@
+
+${ROOT}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
 	cp $< $@

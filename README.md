@@ -138,6 +138,8 @@ there is no sound hardware.
 
 <https://www.w3.org/TR/FileAPI/>
 
+<https://www.oreilly.com/library/view/learning-javascript-design/9781449334840/ch13s15.html>
+
 # Resources
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020

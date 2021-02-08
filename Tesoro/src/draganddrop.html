@@ -3,7 +3,7 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
-<!-- Renders a continuous moving-map display in real-time or from playback. -->
+<!-- Generates a moving map using a dragged and dropped observation file. -->
 <!-- e.g. http://maps/tesoro/draganddrop.html -->
 <html lang="en">
   <head>
@@ -27,172 +27,18 @@
     <div id="dragndrop"><b>X</b> marks the spot!</div>
     <output id="list" />
     <div id="map"></div>
+    <script src="http://maps/tesoro/movingmap.js"></script>
     <script>
 
-      const DELAY = 1000;
-      const MODULO = 60;
-
-      let host = null;
-      let sequence = null;
-      let epoch = null;
-      let latitude = null;
-      let longitude = null;
-      let meansealevel = null;
-      let label = null;
-
-      function report(name) {
-        console.log(name + ' ' +  host + ' ' + sequence + ' ' + epoch + ' ' + latitude + ' ' + longitude + ' ' + meansealevel + ' ' + label);
-      }
-
-      let map = null;
-
-      let youarehere = null;
-
-      let iamdoingthis = null;
-      const INITIALIZING = 'i';
-      const HOSTING = 'h';
-      const SEQUENCING = 'n';
-      const EPOCHING = 'e';
-      const STATIONARY = 's';
-      const MOVING = 'm';
-
-      function renderer(datagram) {
-
-        let record = null;
-        try {
-          record = JSON.parse(datagram);
-        } catch(error) {
-          console.log('Parsing ' + error);
-          console.log(datagram);
-          return;
-        }
-
-        let nam = record.NAM;
-        let num = record.NUM;
-        let tim = record.TIM;
-        let lat = record.LAT;
-        let lon = record.LON;
-        let msl = record.MSL;
-        let lbl = record.LBL;
-
-        if (map == null) {
-
-          map = L.map('map', { center: [ lat, lon ], zoom: 18 });
-          L.tileLayer('http://maps/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
-          L.control.scale().addTo(map);
-          youarehere = L.marker([ lat, lon ]);
-          youarehere.addTo(map).bindPopup(lbl);
-
-          host = nam;
-          sequence = num;
-          epoch = tim;
-          latitude = lat;
-          longitude = lon;
-          meansealevel = msl;
-          label = lbl;
-
-          report('Starting');
-          iamdoingthis = INITIALIZING;
-
-        } else if (nam != host) {
-
-          if ((iamdoingthis != HOSTING) || ((sequence % MODULO) == 0)) {
-            report('Host');
-            console.log('NAM ' + nam);
-            iamdoingthis = HOSTING;
-          }
-
-        } else if (num <= sequence) {
-
-          if ((iamdoingthis != SEQUENCING) || ((sequence % MODULO) == 0)) {
-            report('Sequence');
-            console.log('NUM ' + num);
-            iamdoingthis = SEQUENCING;
-          }
-
-        } else if (tim <= epoch) {
-
-          if ((iamdoingthis != EPOCHING) || ((sequence % MODULO) == 0)) {
-            report('Epoch');
-            console.log('TIM ' + tim);
-            iamdoingthis = EPOCHING;
-          }
-
-        } else if ((lat == latitude) && (lon == longitude)) {
-
-          youarehere.setPopupContent(lbl);
-
-          sequence = num;
-          epoch = tim;
-          meansealevel = msl;
-          label = lbl;
-
-          if ((iamdoingthis != STATIONARY) || ((sequence % MODULO) == 0)) {
-            report('Stationary');
-            iamdoingthis = STATIONARY;
-          }
-
-        } else {
-
-          map.panTo([ lat, lon ]);
-          youarehere.setLatLng([ lat, lon ]).setPopupContent(lbl);
-
-          sequence = num;
-          epoch = tim;
-          latitude = lat;
-          longitude = lon;
-          meansealevel = msl;
-          label = lbl;
-
-          if ((iamdoingthis != MOVING) || ((sequence % MODULO) == 0)) {
-            report('Moving');
-            iamdoingthis = MOVING;
-          }
-
-        }
-
-      }
-
-      let observation = null;
-
-      let timer = null;
-
-      function periodic(observation) {
-        let consumer = new FileReader();
-        consumer.onload = function(sothishappened) {
-          let datagram = sothishappened.target.result;
-          renderer(datagram);
-          timer = setTimeout(periodic, DELAY, observation);
-        };
-        consumer.onerror = function(sothishappened) {
-          console.log('Reading ' + consumer.error);
-          consumer.abort();
-        }
-        consumer.onabort = function(sothishappened) {
-          console.log('Aborting');
-        }
-        consumer.readAsText(observation);
-      }
-
-      function process(observation) {
-        try {
-          if (timer != null) { clearTimeout(timer); }
-          periodic(observation);
-        } catch (error) {
-          console.log('Processing ' + error);
-        }
-      }
-
-      function selector(sothishappened) {
+      function Tesoro_selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
         let list = sothishappened.dataTransfer.files;
         let observation = list[0];
-        console.log('Selecting ' + observation.name);
-        process(observation);
+        Tesoro_movingmap(observation);
       }
 
-      function dragger(sothishappened) {
+      function Tesoro_dragger(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
         sothishappened.dataTransfer.dropEffect = 'copy';
@@ -200,8 +46,8 @@
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         let dragndrop = document.getElementById('dragndrop');
-        dragndrop.addEventListener('dragover', dragger, false);
-        dragndrop.addEventListener('drop', selector, false);
+        dragndrop.addEventListener('dragover', Tesoro_dragger, false);
+        dragndrop.addEventListener('drop', Tesoro_selector, false);
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
       }
