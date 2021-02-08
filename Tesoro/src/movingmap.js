@@ -167,15 +167,20 @@ function Tesoro_periodic(observation) {
 }
 
 function Tesoro_movingmap(observation) {
+
   const READING = 'r';
+
   try {
+
     if (Tesoro_timer != null) { clearTimeout(Tesoro_timer); }
     if (Tesoro_consumer != null) { Tesoro_consumer.abort(); }
-    if (Tesoro_map != null) { Tesoro_map = null; }
+
     console.log('Reading ' + observation.name);
     Tesoro_state = READING;
     Tesoro_periodic(observation);
+
   } catch (error) {
     console.log('MovingMap ' + error);
   }
+
 }
