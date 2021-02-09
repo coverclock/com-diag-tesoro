@@ -30,6 +30,9 @@
     <script src="http://maps/tesoro/movingmap.js"></script>
     <script>
 
+      /// @function Tesoro_selector
+      /// Fires on selection of an observation file by the user.
+      /// @param {sothishappened} is the event for the file selection.
       function Tesoro_selector(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
@@ -38,6 +41,9 @@
         Tesoro_movingmap(observation);
       }
 
+      /// @function Tesoro_dragger
+      /// Fires on dragging an observation file across the selection area.
+      /// @param {sothishappened} is the event for the file dragging.
       function Tesoro_dragger(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
