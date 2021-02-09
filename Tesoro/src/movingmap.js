@@ -142,7 +142,7 @@ function Tesoro_periodic(observation) {
 
   const DELAY = 1000;
 
-  const REREADING = 'R';
+  const RESTART = 'R';
 
   Tesoro_consumer = new FileReader();
 
@@ -153,10 +153,17 @@ function Tesoro_periodic(observation) {
   };
 
   Tesoro_consumer.onerror = function(sothishappened) {
-    console.log('Rereading ' + Tesoro_consumer.error);
-    Tesoro_consumer.abort();
-    Tesoro_state = REREADING;
-    Tesoro_timer = setTimeout(Tesoro_periodic, DELAY, observation);
+    console.log('Restart ' + Tesoro_consumer.error);
+    Tesoro_state = RESTART;
+    // The automatic restart doesn't work. My guess is that the File
+    // object that observable points to is (perhaps deliberately)
+    // contaminated by the handling of the NotReadableError in the
+    // FileReader. This is why restarting the moving map by reselecting
+    // works: it generates a new File object. This leaves open the question
+    // of why the NotReadableError occurs in the first place, and
+    // almost always near the beginning of observation stream.
+    // Tesoro_timer = setTimeout(Tesoro_periodic, DELAY, observation);
+    alert('Reselect ' + observation.name + ' ' + Tesoro_consumer.error);
   }
 
   Tesoro_consumer.onabort = function(sothishappened) {
