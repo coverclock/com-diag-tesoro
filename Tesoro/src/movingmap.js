@@ -22,6 +22,8 @@ let Tesoro_youarehere = null;
 
 let Tesoro_state = null;
 
+let Tesoro_stall = 0;
+
 function Tesoro_render(datagram) {
 
   let nam = null
@@ -85,9 +87,10 @@ function Tesoro_render(datagram) {
 
   } else if (num == Tesoro_sequence) {
 
-    if ((Tesoro_sequence % MODULO) == 0) {
+    if (Tesoro_stall == 1) {
       Tesoro_report('Stall');
     }
+    Tesoro_stall = Tesoro_stall + 1;
 
   } else if (num < Tesoro_sequence) {
 
@@ -118,6 +121,8 @@ function Tesoro_render(datagram) {
       Tesoro_state = STATIONARY;
     }
 
+    Tesoro_stall = 0;
+
   } else {
 
     Tesoro_map.panTo([ lat, lon ]);
@@ -134,6 +139,8 @@ function Tesoro_render(datagram) {
       Tesoro_report('Moving');
       Tesoro_state = MOVING;
     }
+
+    Tesoro_stall = 0;
 
   }
 
