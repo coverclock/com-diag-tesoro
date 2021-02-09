@@ -5,13 +5,13 @@
 /// <mailto: mailto:coverclock@diag.com>
 /// Renders a continuous moving-map display in real-time or from playback.
 
-let Tesoro_host = '';
+let Tesoro_host = '?';
 let Tesoro_sequence = 0;
 let Tesoro_epoch = 0;
 let Tesoro_latitude = 0.0;
 let Tesoro_longitude = 0.0;
 let Tesoro_meansealevel = 0.0;
-let Tesoro_label = '';
+let Tesoro_label = '?';
 
 /// @function Tesoro_report
 /// Report the latest valid values extracted from an observation to the console.
@@ -30,33 +30,14 @@ let Tesoro_stall = 0;
 
 /// @function Tesoro_render
 /// Initialize a new map or update an existing map with the latest observation.
-/// @param {datagram} is the JSON payload of the observation.
-function Tesoro_render(datagram) {
-
-  let nam = null
-  let num = null
-  let tim = null
-  let lat = null
-  let lon = null
-  let msl = null
-  let lbl = null
-
-  // Extract the fields from the JSON datagram in the observation.
-
-  try {
-    let record = JSON.parse(datagram);
-    nam = record.NAM;
-    num = record.NUM + 0;
-    tim = record.TIM + 0;
-    lat = record.LAT + 0.0;
-    lon = record.LON + 0.0;
-    msl = record.MSL + 0.0;
-    lbl = record.LBL;
-  } catch(iregrettoinformyou) {
-    console.log('Parsing ' + iregrettoinformyou);
-    console.log(datagram);
-    return;
-  }
+/// @param {nam} is the name of the node generating the data.
+/// @param {num} is a monotonically increasing sequence number.
+/// @param {tim} is GPS-generated UTC time in seconds after the POSIX epoch.
+/// @param {lat} is the latitude in signed decimal degrees.
+/// @param {lon} is the longitude in signed decimal degrees.
+/// @param {msl} is the altitude in meters above mean sea level.
+/// @param {lbl} is a label to apply to the marker on the map.
+function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   const MODULO = 60;
   const THRESHOLD = 2;
@@ -65,7 +46,7 @@ function Tesoro_render(datagram) {
   const HOSTING = 'h';
   const SEQUENCING = 'n';
   const EPOCHING = 'e';
-  const STATIONARY = 's';
+  const WAITING = 'w';
   const MOVING = 'm';
 
   if (Tesoro_map == null) {
@@ -94,8 +75,8 @@ function Tesoro_render(datagram) {
     // Unexpected: the host NAMe has changed.
 
     if ((Tesoro_state != HOSTING) || ((Tesoro_sequence % MODULO) == 0)) {
-      Tesoro_report('Host');
       console.log('NAM ' + nam);
+      Tesoro_report('Hosting');
       Tesoro_state = HOSTING;
     }
 
@@ -106,7 +87,7 @@ function Tesoro_render(datagram) {
     if (Tesoro_stall < THRESHOLD) {
       Tesoro_stall = Tesoro_stall + 1;
     } else if (Tesoro_stall == THRESHOLD) {
-      Tesoro_report('Stall');
+      Tesoro_report('Stalling');
       Tesoro_stall = Tesoro_stall + 1;
     } else  {
       // Do nothing.
@@ -117,8 +98,8 @@ function Tesoro_render(datagram) {
     // Unexpected: the sequence NUMber has run backwards.
 
     if ((Tesoro_state != SEQUENCING) || ((Tesoro_sequence % MODULO) == 0)) {
-      Tesoro_report('Sequence');
       console.log('NUM ' + num);
+      Tesoro_report('Sequencing');
       Tesoro_state = SEQUENCING;
     }
 
@@ -129,8 +110,8 @@ function Tesoro_render(datagram) {
     // Unexpected: the epoch TIMe has run backwards.
 
     if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % MODULO) == 0)) {
-      Tesoro_report('Epoch');
       console.log('TIM ' + tim);
+      Tesoro_report('Epoching');
       Tesoro_state = EPOCHING;
     }
 
@@ -146,9 +127,9 @@ function Tesoro_render(datagram) {
     Tesoro_epoch = tim;
     Tesoro_label = lbl;
 
-    if ((Tesoro_state != STATIONARY) || ((Tesoro_sequence % MODULO) == 0)) {
-      Tesoro_report('Stationary');
-      Tesoro_state = STATIONARY;
+    if ((Tesoro_state != WAITING) || ((Tesoro_sequence % MODULO) == 0)) {
+      Tesoro_report('Waiting');
+      Tesoro_state = WAITING;
     }
 
     Tesoro_stall = 0;
@@ -178,6 +159,40 @@ function Tesoro_render(datagram) {
 
 }
 
+/// @function Tesoro_parse
+/// Parse the required parameters out of the datagram and pass to the renderer.
+/// @param {datagram} is the JSON payload of the observation.
+function Tesoro_parse(datagram) {
+
+  let nam = null
+  let num = null
+  let tim = null
+  let lat = null
+  let lon = null
+  let msl = null
+  let lbl = null
+
+  // Extract the fields from the JSON datagram in the observation.
+
+  try {
+    let record = JSON.parse(datagram);
+    nam = record.NAM;
+    num = record.NUM + 0;
+    tim = record.TIM + 0;
+    lat = record.LAT + 0.0;
+    lon = record.LON + 0.0;
+    msl = record.MSL + 0.0;
+    lbl = record.LBL;
+  } catch(iregrettoinformyou) {
+    console.log('Error ' + datagram + ' ' + iregrettoinformyou);
+    Tesoro_report('Parsing ');
+    return;
+  }
+
+  Tesoro_render(nam, num, tim, lat, lon, msl, lbl);
+
+}
+
 let Tesoro_timer = null;
 
 /// @function Tesoro_periodic
@@ -192,14 +207,13 @@ function Tesoro_periodic(observation) {
   let consumer = new FileReader();
 
   consumer.onload = function(sothishappened) {
-    let datagram = sothishappened.target.result;
-    Tesoro_render(datagram);
+    Tesoro_parse(sothishappened.target.result);
     Tesoro_timer = setTimeout(Tesoro_periodic, PERIOD, observation);
   };
 
   consumer.onerror = function(sothishappened) {
-    Tesoro_report('Restarting ');
-    console.log(observation.name + ' ' + consumer.error);
+    console.log('Error ' + observation.name + ' ' + consumer.error);
+    Tesoro_report('Restarting');
     Tesoro_state = RESTART;
     // The automatic restart doesn't work. My guess is that the File
     // object that observable points to is (perhaps deliberately)
@@ -214,10 +228,6 @@ function Tesoro_periodic(observation) {
     alert('Reselect ' + observation.name + ' ' + consumer.error);
   }
 
-  consumer.onabort = function(sothishappened) {
-    console.log('Aborting');
-  }
-
   consumer.readAsText(observation);
 }
 
@@ -229,15 +239,13 @@ function Tesoro_movingmap(observation) {
   const READING = 'r';
 
   try {
-
     if (Tesoro_timer != null) { clearTimeout(Tesoro_timer); }
-
-    console.log('Reading ' + observation.name);
+    console.log('Observing ' + observation.name);
+    Tesoro_report('Reading');
     Tesoro_state = READING;
     Tesoro_periodic(observation);
-
   } catch (iregrettoinformyou) {
-    console.log('Failing ' + iregrettoinformyou);
+    console.log('Error ' + observation.name + ' ' + iregrettoinformyou);
   }
 
 }
