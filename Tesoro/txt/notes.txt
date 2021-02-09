@@ -330,3 +330,506 @@ $ firefox
 4.2 Enter "86400" (or whatever).
 4.3 Click on checkmark icon.
 5. Quit and restart Firefox.
+
+void FileReader::FreeDataAndDispatchError(nsresult aRv) {
+  // Set the status attribute, and dispatch the error event
+  switch (aRv) {
+    case NS_ERROR_FILE_NOT_FOUND:
+      mError = DOMException::Create(NS_ERROR_DOM_NOT_FOUND_ERR);
+      break;
+    case NS_ERROR_FILE_ACCESS_DENIED:
+      mError = DOMException::Create(NS_ERROR_DOM_SECURITY_ERR);
+      break;
+    default:
+      mError = DOMException::Create(NS_ERROR_DOM_FILE_NOT_READABLE_ERR);
+      break;
+  }
+
+  FreeDataAndDispatchError();
+}
+
+nsresult NS_ErrorAccordingToNSPR() {
+  PRErrorCode err = PR_GetError();
+  switch (err) {
+    case PR_OUT_OF_MEMORY_ERROR:
+      return NS_ERROR_OUT_OF_MEMORY;
+    case PR_WOULD_BLOCK_ERROR:
+      return NS_BASE_STREAM_WOULD_BLOCK;
+    case PR_FILE_NOT_FOUND_ERROR:
+      return NS_ERROR_FILE_NOT_FOUND;
+    case PR_READ_ONLY_FILESYSTEM_ERROR:
+      return NS_ERROR_FILE_READ_ONLY;
+    case PR_NOT_DIRECTORY_ERROR:
+      return NS_ERROR_FILE_NOT_DIRECTORY;
+    case PR_IS_DIRECTORY_ERROR:
+      return NS_ERROR_FILE_IS_DIRECTORY;
+    case PR_LOOP_ERROR:
+      return NS_ERROR_FILE_UNRESOLVABLE_SYMLINK;
+    case PR_FILE_EXISTS_ERROR:
+      return NS_ERROR_FILE_ALREADY_EXISTS;
+    case PR_FILE_IS_LOCKED_ERROR:
+      return NS_ERROR_FILE_IS_LOCKED;
+    case PR_FILE_TOO_BIG_ERROR:
+      return NS_ERROR_FILE_TOO_BIG;
+    case PR_NO_DEVICE_SPACE_ERROR:
+      return NS_ERROR_FILE_NO_DEVICE_SPACE;
+    case PR_NAME_TOO_LONG_ERROR:
+      return NS_ERROR_FILE_NAME_TOO_LONG;
+    case PR_DIRECTORY_NOT_EMPTY_ERROR:
+      return NS_ERROR_FILE_DIR_NOT_EMPTY;
+    case PR_NO_ACCESS_RIGHTS_ERROR:
+      return NS_ERROR_FILE_ACCESS_DENIED;
+    default:
+      return NS_ERROR_FAILURE;
+  }
+}
+
+void
+nss_MD_unix_map_flock_error(int err)
+{
+    PRErrorCode prError;
+    switch (err) {
+        case EINVAL:
+            prError = PR_BAD_DESCRIPTOR_ERROR;
+            break;
+        case EWOULDBLOCK:
+            prError = PR_FILE_IS_LOCKED_ERROR;
+            break;
+        default:
+            nss_MD_unix_map_default_error(err);
+            return;
+    }
+    PR_SetError(prError, err);
+}
+
+void
+nss_MD_unix_map_lockf_error(int err)
+{
+    PRErrorCode prError;
+    switch (err) {
+        case EACCES:
+            prError = PR_FILE_IS_LOCKED_ERROR;
+            break;
+        case EDEADLK:
+            prError = PR_INSUFFICIENT_RESOURCES_ERROR;
+            break;
+        default:
+            nss_MD_unix_map_default_error(err);
+            return;
+    }
+    PR_SetError(prError, err);
+}
+
+#ifdef HPUX11
+void
+nss_MD_hpux_map_sendfile_error(int err)
+{
+    nss_MD_unix_map_default_error(err);
+}
+#endif /* HPUX11 */
+
+void
+nss_MD_unix_map_default_error(int err)
+{
+    PRErrorCode prError;
+    switch (err) {
+        case EACCES:
+            prError = PR_NO_ACCESS_RIGHTS_ERROR;
+            break;
+        case EADDRINUSE:
+            prError = PR_ADDRESS_IN_USE_ERROR;
+            break;
+        case EADDRNOTAVAIL:
+            prError = PR_ADDRESS_NOT_AVAILABLE_ERROR;
+            break;
+        case EAFNOSUPPORT:
+            prError = PR_ADDRESS_NOT_SUPPORTED_ERROR;
+            break;
+        case EAGAIN:
+            prError = PR_WOULD_BLOCK_ERROR;
+/*
+     * On QNX and Neutrino, EALREADY is defined as EBUSY.
+     */
+#if EALREADY != EBUSY
+        case EALREADY:
+            prError = PR_ALREADY_INITIATED_ERROR;
+            break;
+#endif
+        case EBADF:
+            prError = PR_BAD_DESCRIPTOR_ERROR;
+            break;
+#ifdef EBADMSG
+        case EBADMSG:
+            prError = PR_IO_ERROR;
+            break;
+#endif
+        case EBUSY:
+            prError = PR_FILESYSTEM_MOUNTED_ERROR;
+            break;
+        case ECONNREFUSED:
+            prError = PR_CONNECT_REFUSED_ERROR;
+            break;
+        case ECONNRESET:
+            prError = PR_CONNECT_RESET_ERROR;
+            break;
+        case EDEADLK:
+            prError = PR_DEADLOCK_ERROR;
+            break;
+#ifdef EDIRCORRUPTED
+        case EDIRCORRUPTED:
+            prError = PR_DIRECTORY_CORRUPTED_ERROR;
+            break;
+#endif
+#ifdef EDQUOT
+        case EDQUOT:
+            prError = PR_NO_DEVICE_SPACE_ERROR;
+            break;
+#endif
+        case EEXIST:
+            prError = PR_FILE_EXISTS_ERROR;
+            break;
+        case EFAULT:
+            prError = PR_ACCESS_FAULT_ERROR;
+            break;
+        case EFBIG:
+            prError = PR_FILE_TOO_BIG_ERROR;
+            break;
+        case EINPROGRESS:
+            prError = PR_IN_PROGRESS_ERROR;
+            break;
+        case EINTR:
+            prError = PR_PENDING_INTERRUPT_ERROR;
+            break;
+        case EINVAL:
+            prError = PR_INVALID_ARGUMENT_ERROR;
+            break;
+        case EIO:
+            prError = PR_IO_ERROR;
+            break;
+        case EISCONN:
+            prError = PR_IS_CONNECTED_ERROR;
+            break;
+        case EISDIR:
+            prError = PR_IS_DIRECTORY_ERROR;
+            break;
+        case ELOOP:
+            prError = PR_LOOP_ERROR;
+            break;
+        case EMFILE:
+            prError = PR_PROC_DESC_TABLE_FULL_ERROR;
+            break;
+        case EMLINK:
+            prError = PR_MAX_DIRECTORY_ENTRIES_ERROR;
+            break;
+        case EMSGSIZE:
+            prError = PR_INVALID_ARGUMENT_ERROR;
+            break;
+#ifdef EMULTIHOP
+        case EMULTIHOP:
+            prError = PR_REMOTE_FILE_ERROR;
+            break;
+#endif
+        case ENAMETOOLONG:
+            prError = PR_NAME_TOO_LONG_ERROR;
+            break;
+        case ENETUNREACH:
+            prError = PR_NETWORK_UNREACHABLE_ERROR;
+            break;
+        case ENFILE:
+            prError = PR_SYS_DESC_TABLE_FULL_ERROR;
+            break;
+#if !defined(SCO)
+        case ENOBUFS:
+            prError = PR_INSUFFICIENT_RESOURCES_ERROR;
+            break;
+#endif
+        case ENODEV:
+            prError = PR_FILE_NOT_FOUND_ERROR;
+            break;
+        case ENOENT:
+            prError = PR_FILE_NOT_FOUND_ERROR;
+            break;
+        case ENOLCK:
+            prError = PR_FILE_IS_LOCKED_ERROR;
+            break;
+#ifdef ENOLINK
+        case ENOLINK:
+            prError = PR_REMOTE_FILE_ERROR;
+            break;
+#endif
+        case ENOMEM:
+            prError = PR_OUT_OF_MEMORY_ERROR;
+            break;
+        case ENOPROTOOPT:
+            prError = PR_INVALID_ARGUMENT_ERROR;
+            break;
+        case ENOSPC:
+            prError = PR_NO_DEVICE_SPACE_ERROR;
+            break;
+#ifdef ENOSR
+        case ENOSR:
+            prError = PR_INSUFFICIENT_RESOURCES_ERROR;
+            break;
+#endif
+        case ENOTCONN:
+            prError = PR_NOT_CONNECTED_ERROR;
+            break;
+        case ENOTDIR:
+            prError = PR_NOT_DIRECTORY_ERROR;
+            break;
+        case ENOTSOCK:
+            prError = PR_NOT_SOCKET_ERROR;
+            break;
+        case ENXIO:
+            prError = PR_FILE_NOT_FOUND_ERROR;
+            break;
+        case EOPNOTSUPP:
+            prError = PR_NOT_TCP_SOCKET_ERROR;
+            break;
+#ifdef EOVERFLOW
+        case EOVERFLOW:
+            prError = PR_BUFFER_OVERFLOW_ERROR;
+            break;
+#endif
+        case EPERM:
+            prError = PR_NO_ACCESS_RIGHTS_ERROR;
+            break;
+        case EPIPE:
+            prError = PR_CONNECT_RESET_ERROR;
+            break;
+#ifdef EPROTO
+        case EPROTO:
+            prError = PR_IO_ERROR;
+            break;
+#endif
+        case EPROTONOSUPPORT:
+            prError = PR_PROTOCOL_NOT_SUPPORTED_ERROR;
+            break;
+        case EPROTOTYPE:
+            prError = PR_ADDRESS_NOT_SUPPORTED_ERROR;
+            break;
+        case ERANGE:
+            prError = PR_INVALID_METHOD_ERROR;
+            break;
+        case EROFS:
+            prError = PR_READ_ONLY_FILESYSTEM_ERROR;
+            break;
+        case ESPIPE:
+            prError = PR_INVALID_METHOD_ERROR;
+            break;
+        case ETIMEDOUT:
+            prError = PR_IO_TIMEOUT_ERROR;
+            break;
+#if EWOULDBLOCK != EAGAIN
+        case EWOULDBLOCK:
+            prError = PR_WOULD_BLOCK_ERROR;
+            break;
+#endif
+        case EXDEV:
+            prError = PR_NOT_SAME_DEVICE_ERROR;
+            break;
+
+        default:
+            prError = PR_UNKNOWN_ERROR;
+            break;
+    }
+    PR_SetError(prError, err);
+}
+
+EINVAL: Invalid argument
+EWOULDBLOCK: Resource temporarily unavailable
+EACCES: Permission denied
+EDEADLK: Resource deadlock avoided
+EACCES: Permission denied
+EADDRINUSE: Address already in use
+EADDRNOTAVAIL: Cannot assign requested address
+EAFNOSUPPORT: Address family not supported by protocol
+EAGAIN: Resource temporarily unavailable
+EALREADY: Operation already in progress
+EBADF: Bad file descriptor
+EBADMSG: Bad message
+EBUSY: Device or resource busy
+ECONNREFUSED: Connection refused
+ECONNRESET: Connection reset by peer
+EDEADLK: Resource deadlock avoided
+EDQUOT: Disk quota exceeded
+EEXIST: File exists
+EFAULT: Bad address
+EFBIG: File too large
+EINPROGRESS: Operation now in progress
+EINTR: Interrupted system call
+EINVAL: Invalid argument
+EIO: Input/output error
+EISCONN: Transport endpoint is already connected
+EISDIR: Is a directory
+ELOOP: Too many levels of symbolic links
+EMFILE: Too many open files
+EMLINK: Too many links
+EMSGSIZE: Message too long
+EMULTIHOP: Multihop attempted
+ENAMETOOLONG: File name too long
+ENETUNREACH: Network is unreachable
+ENFILE: Too many open files in system
+ENOBUFS: No buffer space available
+ENODEV: No such device
+ENOENT: No such file or directory
+ENOLCK: No locks available
+ENOLINK: Link has been severed
+ENOMEM: Cannot allocate memory
+ENOPROTOOPT: Protocol not available
+ENOSPC: No space left on device
+ENOSR: Out of streams resources
+ENOTCONN: Transport endpoint is not connected
+ENOTDIR: Not a directory
+ENOTSOCK: Socket operation on non-socket
+ENXIO: No such device or address
+EOPNOTSUPP: Operation not supported
+EOVERFLOW: Value too large for defined data type
+EPERM: Operation not permitted
+EPIPE: Broken pipe
+EPROTO: Protocol error
+EPROTONOSUPPORT: Protocol not supported
+EPROTOTYPE: Protocol wrong type for socket
+ERANGE: Numerical result out of range
+EROFS: Read-only file system
+ESPIPE: Illegal seek
+ETIMEDOUT: Connection timed out
+EWOULDBLOCK: Resource temporarily unavailable
+EXDEV: Invalid cross-device link
+
+open(2):
+
+       EACCES The  requested access to the file is not allowed, or search per‐
+              mission is denied for one of the directories in the path  prefix
+              of  pathname,  or the file did not exist yet and write access to
+              the parent directory is not  allowed.   (See  also  path_resolu‐
+              tion(7).)
+
+       EDQUOT Where  O_CREAT  is  specified,  the file does not exist, and the
+              user's quota of disk blocks or inodes on the filesystem has been
+              exhausted.
+
+       EEXIST pathname already exists and O_CREAT and O_EXCL were used.
+
+       EFAULT pathname points outside your accessible address space.
+
+       EFBIG  See EOVERFLOW.
+
+       EINTR  While  blocked  waiting  to  complete  an  open of a slow device
+              (e.g., a FIFO; see fifo(7)), the call was interrupted by a  sig‐
+              nal handler; see signal(7).
+
+       EINVAL The  filesystem  does  not support the O_DIRECT flag.  See NOTES
+              for more information.
+
+       EINVAL Invalid value in flags.
+
+       EINVAL O_TMPFILE was specified  in  flags,  but  neither  O_WRONLY  nor
+              O_RDWR was specified.
+
+       EINVAL O_CREAT  was  specified in flags and the final component ("base‐
+              name") of the new file's pathname is invalid (e.g., it  contains
+              characters not permitted by the underlying filesystem).
+
+       EISDIR pathname refers to a directory and the access requested involved
+              writing (that is, O_WRONLY or O_RDWR is set).
+
+       EISDIR pathname refers to an existing directory, O_TMPFILE and  one  of
+              O_WRONLY or O_RDWR were specified in flags, but this kernel ver‐
+              sion does not provide the O_TMPFILE functionality.
+
+       ELOOP  Too many symbolic links were encountered in resolving pathname.
+
+       ELOOP  pathname was a symbolic link, and flags specified O_NOFOLLOW but
+              not O_PATH.
+
+       EMFILE The per-process limit on the number of open file descriptors has
+              been reached (see the  description  of  RLIMIT_NOFILE  in  getr‐
+              limit(2)).
+
+       ENAMETOOLONG
+              pathname was too long.
+
+       ENFILE The system-wide limit on the total number of open files has been
+              reached.
+
+       ENODEV pathname refers to a device special file  and  no  corresponding
+              device  exists.   (This is a Linux kernel bug; in this situation
+              ENXIO must be returned.)
+
+       ENOENT O_CREAT is not set and the named file does not exist.
+
+       ENOENT A directory component in pathname does not exist or  is  a  dan‐
+              gling symbolic link.
+
+       ENOENT pathname refers to a nonexistent directory, O_TMPFILE and one of
+              O_WRONLY or O_RDWR were specified in flags, but this kernel ver‐
+              sion does not provide the O_TMPFILE functionality.
+
+       ENOMEM The  named  file is a FIFO, but memory for the FIFO buffer can't
+              be allocated because the per-user hard limit on  memory  alloca‐
+              tion  for  pipes  has  been reached and the caller is not privi‐
+              leged; see pipe(7).
+
+       ENOMEM Insufficient kernel memory was available.
+
+       ENOSPC pathname was to be created but the  device  containing  pathname
+              has no room for the new file.
+
+       ENOTDIR
+              A  component  used as a directory in pathname is not, in fact, a
+              directory, or O_DIRECTORY was specified and pathname was  not  a
+              directory.
+
+       ENXIO  O_NONBLOCK  |  O_WRONLY is set, the named file is a FIFO, and no
+              process has the FIFO open for reading.
+
+       ENXIO  The file is a device special file and  no  corresponding  device
+              exists.
+
+       ENXIO  The file is a UNIX domain socket.
+
+       EOPNOTSUPP
+              The filesystem containing pathname does not support O_TMPFILE.
+
+       EOVERFLOW
+              pathname  refers  to  a  regular  file  that  is too large to be
+              opened.  The usual scenario here is that an application compiled
+              on  a  32-bit  platform  without -D_FILE_OFFSET_BITS=64 tried to
+              open a  file  whose  size  exceeds  (1<<31)-1  bytes;  see  also
+              O_LARGEFILE  above.   This is the error specified by POSIX.1; in
+              kernels before 2.6.24, Linux gave the error EFBIG for this case.
+
+       EPERM  The O_NOATIME flag was specified, but the effective user  ID  of
+              the  caller  did  not match the owner of the file and the caller
+              was not privileged.
+
+       EPERM  The operation was prevented by a file seal; see fcntl(2).
+
+       EROFS  pathname refers to a file on a read-only  filesystem  and  write
+              access was requested.
+
+       ETXTBSY
+              pathname  refers to an executable image which is currently being
+              executed and write access was requested.
+
+       ETXTBSY
+              pathname refers to a file that is currently in  use  as  a  swap
+              file, and the O_TRUNC flag was specified.
+
+       ETXTBSY
+              pathname  refers  to  a file that is currently being read by the
+              kernel (e.g. for module/firmware loading), and write access  was
+              requested.
+
+       EWOULDBLOCK
+              The O_NONBLOCK flag was specified, and an incompatible lease was
+              held on the file (see fcntl(2)).
+
+       The following additional errors can occur for openat():
+
+       EBADF  dirfd is not a valid file descriptor.
+
+       ENOTDIR
+              pathname is a relative pathname and dirfd is a  file  descriptor
+              referring to a file other than a directory.
