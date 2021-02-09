@@ -199,7 +199,7 @@ function Tesoro_periodic(observation) {
 
   consumer.onerror = function(sothishappened) {
     Tesoro_report('Restarting ');
-    console.log(consumer.error);
+    console.log(observation.name + ' ' + consumer.error);
     Tesoro_state = RESTART;
     // The automatic restart doesn't work. My guess is that the File
     // object that observable points to is (perhaps deliberately)
