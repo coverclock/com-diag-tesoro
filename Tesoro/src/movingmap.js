@@ -50,6 +50,7 @@ function Tesoro_render(datagram) {
   }
 
   const MODULO = 60;
+  const THRESHOLD = 2;
 
   const INITIALIZING = 'i';
   const HOSTING = 'h';
@@ -87,10 +88,14 @@ function Tesoro_render(datagram) {
 
   } else if (num == Tesoro_sequence) {
 
-    if (Tesoro_stall == 1) {
+    if (Threshold_stall < THRESHOLD) {
+      Tesoro_stall = Tesoro_stall + 1;
+    } else if (Tesoro_stall == THRESHOLD) {
       Tesoro_report('Stall');
+      Tesoro_stall = Tesoro_stall + 1;
+    } else  {
+      // Do nothing.
     }
-    Tesoro_stall = Tesoro_stall + 1;
 
   } else if (num < Tesoro_sequence) {
 
@@ -100,6 +105,8 @@ function Tesoro_render(datagram) {
       Tesoro_state = SEQUENCING;
     }
 
+    Tesoro_stall = 0;
+
   } else if (tim <= Tesoro_epoch) {
 
     if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % MODULO) == 0)) {
@@ -107,6 +114,8 @@ function Tesoro_render(datagram) {
       console.log('TIM ' + tim);
       Tesoro_state = EPOCHING;
     }
+
+    Tesoro_stall = 0;
 
   } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude) && (msl == Tesoro_meansealevel)) {
 
