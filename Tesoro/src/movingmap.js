@@ -4,13 +4,13 @@
 // mailto: mailto:coverclock@diag.com
 // Renders a continuous moving-map display in real-time or from playback.
 
-let Tesoro_host = null;
-let Tesoro_sequence = null;
-let Tesoro_epoch = null;
-let Tesoro_latitude = null;
-let Tesoro_longitude = null;
-let Tesoro_meansealevel = null;
-let Tesoro_label = null;
+let Tesoro_host = '';
+let Tesoro_sequence = 0;
+let Tesoro_epoch = 0;
+let Tesoro_latitude = 0.0;
+let Tesoro_longitude = 0.0;
+let Tesoro_meansealevel = 0.0;
+let Tesoro_label = '';
 
 function Tesoro_report(name) {
   console.log(name + ' ' + Tesoro_host + ' ' + Tesoro_sequence + ' ' + Tesoro_epoch + ' ' + Tesoro_latitude + ' ' + Tesoro_longitude + ' ' + Tesoro_meansealevel + ' ' + Tesoro_label);
@@ -32,15 +32,14 @@ function Tesoro_render(datagram) {
   let msl = null
   let lbl = null
 
-  let record = null;
   try {
-    record = JSON.parse(datagram);
+    let record = JSON.parse(datagram);
     nam = record.NAM;
-    num = record.NUM;
-    tim = record.TIM;
-    lat = record.LAT;
-    lon = record.LON;
-    msl = record.MSL;
+    num = record.NUM + 0;
+    tim = record.TIM + 0;
+    lat = record.LAT + 0.0;
+    lon = record.LON + 0.0;
+    msl = record.MSL + 0.0;
     lbl = record.LBL;
   } catch(error) {
     console.log('Parsing ' + error);
@@ -84,7 +83,13 @@ function Tesoro_render(datagram) {
       Tesoro_state = HOSTING;
     }
 
-  } else if (num <= Tesoro_sequence) {
+  } else if (num == Tesoro_sequence) {
+
+    if ((Tesoro_sequence % MODULO) == 0) {
+      Tesoro_report('Stall');
+    }
+
+  } else if (num < Tesoro_sequence) {
 
     if ((Tesoro_state != SEQUENCING) || ((Tesoro_sequence % MODULO) == 0)) {
       Tesoro_report('Sequence');
@@ -134,26 +139,25 @@ function Tesoro_render(datagram) {
 
 }
 
-let Tesoro_consumer = null;
-
 let Tesoro_timer = null;
 
 function Tesoro_periodic(observation) {
 
-  const DELAY = 1000;
+  const PERIOD = 500;
 
   const RESTART = 'R';
 
-  Tesoro_consumer = new FileReader();
+  let consumer = new FileReader();
 
-  Tesoro_consumer.onload = function(sothishappened) {
+  consumer.onload = function(sothishappened) {
     let datagram = sothishappened.target.result;
     Tesoro_render(datagram);
-    Tesoro_timer = setTimeout(Tesoro_periodic, DELAY, observation);
+    Tesoro_timer = setTimeout(Tesoro_periodic, PERIOD, observation);
   };
 
-  Tesoro_consumer.onerror = function(sothishappened) {
-    console.log('Restart ' + Tesoro_consumer.error);
+  consumer.onerror = function(sothishappened) {
+    Tesoro_report('Restarting ');
+    console.log(consumer.error);
     Tesoro_state = RESTART;
     // The automatic restart doesn't work. My guess is that the File
     // object that observable points to is (perhaps deliberately)
@@ -161,16 +165,18 @@ function Tesoro_periodic(observation) {
     // FileReader. This is why restarting the moving map by reselecting
     // works: it generates a new File object. This leaves open the question
     // of why the NotReadableError occurs in the first place, and
-    // almost always near the beginning of observation stream.
-    // Tesoro_timer = setTimeout(Tesoro_periodic, DELAY, observation);
-    alert('Reselect ' + observation.name + ' ' + Tesoro_consumer.error);
+    // almost always near the beginning of observation stream, and a
+    // subsequent manual restart sometimes runs to completion over the
+    // span of many minutes.
+    // Tesoro_timer = setTimeout(Tesoro_periodic, PERIOD, observation);
+    alert('Reselect ' + observation.name + ' ' + consumer.error);
   }
 
-  Tesoro_consumer.onabort = function(sothishappened) {
+  consumer.onabort = function(sothishappened) {
     console.log('Aborting');
   }
 
-  Tesoro_consumer.readAsText(observation);
+  consumer.readAsText(observation);
 }
 
 function Tesoro_movingmap(observation) {
@@ -180,14 +186,13 @@ function Tesoro_movingmap(observation) {
   try {
 
     if (Tesoro_timer != null) { clearTimeout(Tesoro_timer); }
-    if (Tesoro_consumer != null) { Tesoro_consumer.abort(); }
 
     console.log('Reading ' + observation.name);
     Tesoro_state = READING;
     Tesoro_periodic(observation);
 
   } catch (error) {
-    console.log('MovingMap ' + error);
+    console.log('Failing ' + error);
   }
 
 }
