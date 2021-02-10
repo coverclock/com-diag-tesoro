@@ -543,3 +543,4 @@ open(2):
 
 NS_IMETHODIMP FilePickerParent::IORunnable::Run()
 
+sudo mount -t tmpfs -o size=1M,uid=jsloan,gid=jsloan,mode=0755 tmpfs /var/www/html/tesoro/channel
