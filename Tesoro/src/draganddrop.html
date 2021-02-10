@@ -30,15 +30,15 @@
     <script src="http://maps/tesoro/movingmap.js"></script>
     <script>
 
-      /// @function Tesoro_selector
+      /// @function Tesoro_dropper
       /// Fires on selection of an observation file by the user.
       /// @param {sothishappened} is the event for the file selection.
-      function Tesoro_selector(sothishappened) {
+      function Tesoro_dropper(sothishappened) {
         sothishappened.stopPropagation();
         sothishappened.preventDefault();
         let list = sothishappened.dataTransfer.files;
         let file = list[0];
-        Tesoro_movingmap(file);
+        Tesoro_file(file);
       }
 
       /// @function Tesoro_dragger
@@ -53,7 +53,7 @@
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         let draganddrop = document.getElementById('draganddrop');
         draganddrop.addEventListener('dragover', Tesoro_dragger, false);
-        draganddrop.addEventListener('drop', Tesoro_selector, false);
+        draganddrop.addEventListener('drop', Tesoro_dropper, false);
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
       }

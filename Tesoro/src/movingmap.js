@@ -159,10 +159,10 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
 }
 
-/// @function Tesoro_parse
-/// Parse the required parameters out of the datagram and pass to the renderer.
-/// @param {datagram} is the JSON payload of the observation.
-function Tesoro_parse(datagram) {
+/// @function_extract
+/// Extract the fields out of the record and pass it to the renderer.
+/// @param {record} is the JSON object of the datagram.
+function Tesoro_extract(record) {
 
   let nam = null
   let num = null
@@ -172,10 +172,9 @@ function Tesoro_parse(datagram) {
   let msl = null
   let lbl = null
 
-  // Extract the fields from the JSON datagram in the observation.
+  // Extract the fields from the JSON record.
 
   try {
-    let record = JSON.parse(datagram);
     nam = record.NAM;
     num = record.NUM + 0;
     tim = record.TIM + 0;
@@ -184,31 +183,54 @@ function Tesoro_parse(datagram) {
     msl = record.MSL + 0.0;
     lbl = record.LBL;
   } catch(iregrettoinformyou) {
-    console.log('Error ' + datagram + ' ' + iregrettoinformyou);
-    Tesoro_report('Parsing ');
+    console.log('Error ' + record + ' ' + iregrettoinformyou);
+    Tesoro_report('Extracting');
     return;
   }
 
   Tesoro_render(nam, num, tim, lat, lon, msl, lbl);
+}
+
+/// @function Tesoro_parse
+/// Parse the required parameters out of the datagram and pass to the renderer.
+/// @param {datagram} is the JSON payload of the observation.
+function Tesoro_parse(datagram) {
+
+  let record = null;
+
+  // Parse the record from the datagram.
+
+  try {
+    record = JSON.parse(datagram);
+  } catch(iregrettoinformyou) {
+    console.log('Error ' + datagram + ' ' + iregrettoinformyou);
+    Tesoro_report('Parsing');
+    return;
+  }
+
+  Tesoro_extract(record);
 
 }
 
 let Tesoro_timer = null;
 
-/// @function Tesoro_periodic
+/// @function Tesoro_read
 /// Periodically extract the JSON datagram from the observation and process it.
 /// @param {observation} is the File object that is the observation file.
-function Tesoro_periodic(observation) {
+function Tesoro_read(observation) {
 
   const PERIOD = 500;
 
   const RESTART = 'R';
 
+  // Read the datagram from the observation.
+
   let consumer = new FileReader();
 
   consumer.onload = function(sothishappened) {
-    Tesoro_parse(sothishappened.target.result);
-    Tesoro_timer = setTimeout(Tesoro_periodic, PERIOD, observation);
+    let datagram = sothishappened.target.result
+    Tesoro_parse(datagram);
+    Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
   };
 
   consumer.onerror = function(sothishappened) {
@@ -224,17 +246,17 @@ function Tesoro_periodic(observation) {
     // almost always near the beginning of observation stream, and a
     // subsequent manual restart sometimes runs to completion over the
     // span of many minutes.
-    // Tesoro_timer = setTimeout(Tesoro_periodic, PERIOD, observation);
+    // Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
     alert('Reselect ' + observation.name + ' ' + consumer.error);
   }
 
   consumer.readAsText(observation);
 }
 
-/// @function Tesoro_movingmap
+/// @function Tesoro_file
 /// Given a File object that is an observation file, start the moving map.
 /// @param {observation} is the File object that is the observation file.
-function Tesoro_movingmap(observation) {
+function Tesoro_file(observation) {
 
   const READING = 'r';
 
@@ -243,7 +265,7 @@ function Tesoro_movingmap(observation) {
     console.log('Observing ' + observation.name);
     Tesoro_report('Reading');
     Tesoro_state = READING;
-    Tesoro_periodic(observation);
+    Tesoro_read(observation);
   } catch (iregrettoinformyou) {
     console.log('Error ' + observation.name + ' ' + iregrettoinformyou);
   }

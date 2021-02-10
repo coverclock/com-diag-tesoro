@@ -4,7 +4,7 @@
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
 <!-- Generates a moving map using a chosen observation file. -->
-<!-- e.g. http://maps/tesoro/choosefile.html -->
+<!-- e.g. http://maps/tesoro/selectchannel.html -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -24,23 +24,15 @@
     </style>
   </head>
   <body>
-    <input id="choosefile" type="file"></input>
     <div id="map"></div>
     <script src="http://maps/tesoro/movingmap.js"></script>
     <script>
 
-      /// @function Tesoro_chooser
-      /// Fires on choosing of an observation file by the user.
-      /// @param {sothishappened} is the event for the file choosing.
-      function Tesoro_chooser(sothishappened) {
-        let list = sothishappened.target.files;
-        let file = list[0];
-        Tesoro_file(file);
-      }
-
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let choosefile = document.getElementById('choosefile');
-        choosefile.addEventListener('change', Tesoro_chooser, false);
+        let channel = prompt('Enter channel URL', 'http://host/path/observation.json');
+        if (channel != null) {
+          console.log(channel);
+        }
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
       }
