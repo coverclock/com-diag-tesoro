@@ -271,3 +271,33 @@ function Tesoro_file(observation) {
   }
 
 }
+
+function Tesoro_fetch(channel) {
+
+  const PERIOD = 1000;
+
+  const FETCHING = 'F';
+
+  let data = { NAM: '', NUM: 0, TIM: 0, LAT: 0, LON: 0, MSL: 0, LBL: '' }
+
+  Tesoro_state = FETCHING;
+
+  fetch(channel, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    Tesoro_extract(data);
+  })
+  .catch((iregrettoinformyou) => {
+    console.log('Error ' + channel + ' ' + iregrettoinformyou);
+    Tesoro_report('Refetching');
+  });
+
+  Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
+
+}

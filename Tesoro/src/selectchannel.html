@@ -29,9 +29,10 @@
     <script>
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let channel = prompt('Enter channel URL', 'http://host/path/observation.json');
+        let channel = prompt('Enter channel URL:', 'http://host/path/observation.json');
         if (channel != null) {
-          console.log(channel);
+          console.log('Fetching ' + channel);
+          Tesoro_fetch(channel);
         }
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
