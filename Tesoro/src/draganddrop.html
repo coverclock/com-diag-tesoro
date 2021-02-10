@@ -24,7 +24,7 @@
     </style>
   </head>
   <body>
-    <div id="dragndrop"><b>X</b> marks the spot!</div>
+    <div id="draganddrop"><b>X</b> marks the spot!</div>
     <output id="list" />
     <div id="map"></div>
     <script src="http://maps/tesoro/movingmap.js"></script>
@@ -51,9 +51,9 @@
       }
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let dragndrop = document.getElementById('dragndrop');
-        dragndrop.addEventListener('dragover', Tesoro_dragger, false);
-        dragndrop.addEventListener('drop', Tesoro_selector, false);
+        let draganddrop = document.getElementById('draganddrop');
+        draganddrop.addEventListener('dragover', Tesoro_dragger, false);
+        draganddrop.addEventListener('drop', Tesoro_selector, false);
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
       }
