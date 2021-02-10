@@ -260,6 +260,11 @@ function Tesoro_file(observation) {
 
   const READING = 'r';
 
+  // This doesnt' work reliably, although it can run for many minutes and
+  // is easily restarted manually by the user. I think the problem is a
+  // lock conflict between Firefox (the browser with which I typically test)
+  // and the renameat(2) system call used by the Diminuto observation feature.
+
   try {
     if (Tesoro_timer != null) { clearTimeout(Tesoro_timer); }
     console.log('Observing ' + observation.name);
@@ -272,6 +277,9 @@ function Tesoro_file(observation) {
 
 }
 
+/// @function Tesoro_fetch
+/// Given a URL to an observation file, fetch it and start the moving map.
+/// @param {channel} is the URL to an observation file.
 function Tesoro_fetch(channel) {
 
   const PERIOD = 1000;
@@ -297,6 +305,9 @@ function Tesoro_fetch(channel) {
     console.log('Error ' + channel + ' ' + iregrettoinformyou);
     Tesoro_report('Refetching');
   });
+
+  // This doesn't work either: typical CORS (Cross-Origin Resource Sharing)
+  // policies in Apache prevent the same URL from being fetched more than once.
 
   Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
 
