@@ -8,17 +8,20 @@
 
 PROJECT	:=	tesoro
 TMPDIR	:=	/tmp
-ROOT	:=	/var/www/html/tesoro
-SOURCE	:=	src
+WWW		:=	/var/www/html/tesoro
+CLIENT	:=	web
+SERVER	:=	src
 VERSION	:=	v1.7.1
-BASE	:=	${ROOT}/leaflet/${VERSION}
+BASE	:=	${WWW}/leaflet/${VERSION}
 OWNER	:=	${USER}
-FILES	:=	${ROOT}/base.html ${ROOT}/query.html ${ROOT}/draganddrop.html ${ROOT}/choosefile.html ${ROOT}/selectchannel.html ${ROOT}/movingmap.js
+FILES	:=	${WWW}/base.html ${WWW}/query.html ${WWW}/draganddrop.html ${WWW}/choosefile.html ${WWW}/selectchannel.html ${WWW}/movingmap.js
 LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
-.PHONY:	install leaflet show
+.PHONY:	default install leaflet show
+
+default:
 
 install:	${BASE} ${FILES}
 
@@ -29,26 +32,26 @@ leaflet:	${BASE}
 	rm $$T
 
 show:
-	ls -lR ${ROOT}
+	ls -lR ${WWW}
 
 ${BASE}:
 	sudo mkdir -p ${BASE}
-	sudo chown -R ${OWNER}:${OWNER} ${ROOT}
+	sudo chown -R ${OWNER}:${OWNER} ${WWW}
 
-${ROOT}/base.html:	${SOURCE}/base.html ${BASE}
+${WWW}/base.html:	${CLIENT}/base.html ${BASE}
 	cp $< $@
 
-${ROOT}/query.html:	${SOURCE}/query.html ${BASE}
+${WWW}/query.html:	${CLIENT}/query.html ${BASE}
 	cp $< $@
 
-${ROOT}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
+${WWW}/draganddrop.html:	${CLIENT}/draganddrop.html ${BASE}
 	cp $< $@
 
-${ROOT}/choosefile.html:	${SOURCE}/choosefile.html ${BASE}
+${WWW}/choosefile.html:	${CLIENT}/choosefile.html ${BASE}
 	cp $< $@
 
-${ROOT}/selectchannel.html:	${SOURCE}/selectchannel.html ${BASE}
+${WWW}/selectchannel.html:	${CLIENT}/selectchannel.html ${BASE}
 	cp $< $@
 
-${ROOT}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
+${WWW}/movingmap.js:	${CLIENT}/movingmap.js ${BASE}
 	cp $< $@
