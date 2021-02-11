@@ -140,6 +140,8 @@ there is no sound hardware.
 
 <https://www.oreilly.com/library/view/learning-javascript-design/9781449334840/ch13s15.html>
 
+<https://eng.lyft.com/how-lyft-discovered-openstreetmap-is-the-freshest-map-for-rideshare-a7a41bf92ec>
+
 # Resources
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
