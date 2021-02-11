@@ -19,11 +19,13 @@ LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
-.PHONY:	default install leaflet show
+.PHONY:	all install push leaflet show
 
-default:
+all:
 
-install:	${BASE} ${FILES}
+install:
+
+push:	${BASE} ${FILES}
 
 leaflet:	${BASE}
 	T=`mktemp "$(TMPDIR)/$(ARCHIVE)-XXXXXXXXXX"`; \
