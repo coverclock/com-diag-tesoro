@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<!-- Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA -->
+<!-- Licensed under the terms in LICENSE.txt -->
+<!-- https://github.com/coverclock/com-diag-tesoro -->
+<!-- mailto: mailto:coverclock@diag.com -->
+<!-- Renders a map of the Tumbleweed base station coordinates. -->
+<!-- e.g. http://tesoro/tesoro/base.html -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.css" />
+    <style>
+      html, body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      #map {
+        /* configure the size of the map */
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="http://tesoro/tesoro/movingmap.js"></script>
+    <script>
+
+      Tesoro_render('base', 1, 1599145249, 39.7943071, -105.1533805, 1710.300, '2020-09-03T15:00:49Z');
+
+    </script>
+  </body>
+</html>

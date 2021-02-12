@@ -3,8 +3,8 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
-<!-- Renders a map of the Tumbleweed base station coordinates. -->
-<!-- e.g. http://maps/tesoro/base.html -->
+<!-- Renders a map using information from the URL query parameters. -->
+<!-- e.g. http://tesoro/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -26,10 +26,16 @@
   </head>
   <body>
     <div id="map"></div>
-    <script src="http://maps/tesoro/movingmap.js"></script>
+    <script src="http://tesoro/tesoro/movingmap.js"></script>
     <script>
 
-      Tesoro_render('base', 1, 1599145249, 39.7943071, -105.1533805, 1710.300, '2020-09-03T15:00:49Z');
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        let url = new URL(document.URL);
+        console.log('Querying ' + [...url.searchParams]);
+        Tesoro_query(url);
+      } else {
+        console.log('HTML5 file APIs not supported on this platform.');
+      }
 
     </script>
   </body>

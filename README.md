@@ -43,7 +43,7 @@ infrastructure for both Hazer and Tesoro.
 
 # Examples
 
-In the examples below, "maps" is a OSM tile server on a Raspberry Pi 4B
+In the examples below, "tesoro" is a OSM tile server on a Raspberry Pi 4B
 running behind my firewall and running OpenStreetMaps, currently with
 the database and map data for North America.
 
@@ -51,14 +51,14 @@ The base page renders a static map centered the coordinates of my
 Differential GNSS base station coordinates. This is a quick way to tell
 of the tile server is working from any computer on the same network.
 
-<http://maps/tesoro/base.html>
+<http://tesoro/tesoro/base.html>
 
 The query page takes a query URL containing a latitude and longitude,
 in decimal degrees, and a label, and renders a map centered at those
 coordinates. This is an easy way to view a static map from any computer
 on the same network.
 
-<http://maps/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z>
+<http://tesoro/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z>
 
 The draganddrop page renders a dynamic moving map display from data
 collected using Hazer and fed to it via the Diminuto observation
@@ -69,17 +69,17 @@ position was determined. This can be done in real-time or by playing back
 a CSV file collected in the past. (The fun/tesorodraganddrop.sh script in
 the Hazer repository is an example of the latter.)
 
-<http://maps/tesoro/draganddrop.html>
+<http://tesoro/tesoro/draganddrop.html>
 
 The choosefile page renders a map from a JSON file selected by the
 user from a pop-up menu.
 
-<http://maps/tesoro/choosefile.html>
+<http://tesoro/tesoro/choosefile.html>
 
 The selectchannel page renders a map from JSON fetched via a URL
 endered by the user.
 
-<http://maps/tesoro/selectchannel.html>
+<http://tesoro/tesoro/selectchannel.html>
 
 # Turning the safeties off Firefox (DANGEROUS)
 

@@ -9,8 +9,7 @@
 PROJECT	:=	tesoro
 TMPDIR	:=	/tmp
 WWW		:=	/var/www/html/tesoro
-CLIENT	:=	web
-SERVER	:=	src
+SOURCE	:=	src
 VERSION	:=	v1.7.1
 BASE	:=	${WWW}/leaflet/${VERSION}
 OWNER	:=	${USER}
@@ -21,9 +20,7 @@ LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
 .PHONY:	all install push leaflet show
 
-all:
-
-install:
+all:	push
 
 push:	${BASE} ${FILES}
 
@@ -40,20 +37,20 @@ ${BASE}:
 	sudo mkdir -p ${BASE}
 	sudo chown -R ${OWNER}:${OWNER} ${WWW}
 
-${WWW}/base.html:	${CLIENT}/base.html ${BASE}
+${WWW}/base.html:	${SOURCE}/base.html ${BASE}
 	cp $< $@
 
-${WWW}/query.html:	${CLIENT}/query.html ${BASE}
+${WWW}/query.html:	${SOURCE}/query.html ${BASE}
 	cp $< $@
 
-${WWW}/draganddrop.html:	${CLIENT}/draganddrop.html ${BASE}
+${WWW}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
 	cp $< $@
 
-${WWW}/choosefile.html:	${CLIENT}/choosefile.html ${BASE}
+${WWW}/choosefile.html:	${SOURCE}/choosefile.html ${BASE}
 	cp $< $@
 
-${WWW}/selectchannel.html:	${CLIENT}/selectchannel.html ${BASE}
+${WWW}/selectchannel.html:	${SOURCE}/selectchannel.html ${BASE}
 	cp $< $@
 
-${WWW}/movingmap.js:	${CLIENT}/movingmap.js ${BASE}
+${WWW}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
 	terser < $< > $@

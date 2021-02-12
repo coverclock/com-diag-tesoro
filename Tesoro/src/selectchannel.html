@@ -3,14 +3,14 @@
 <!-- Licensed under the terms in LICENSE.txt -->
 <!-- https://github.com/coverclock/com-diag-tesoro -->
 <!-- mailto: mailto:coverclock@diag.com -->
-<!-- Renders a map using information from the URL query parameters. -->
-<!-- e.g. http://maps/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z -->
+<!-- Generates a moving map using a chosen observation file. -->
+<!-- e.g. http://tesoro/tesoro/selectchannel.html -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="http://maps/tesoro/leaflet/v1.7.1/leaflet.js"></script>
-    <link rel="stylesheet" href="http://maps/tesoro/leaflet/v1.7.1/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.css"></link>
     <style>
       html, body {
         height: 100%;
@@ -18,7 +18,6 @@
         margin: 0;
       }
       #map {
-        /* configure the size of the map */
         width: 100%;
         height: 100%;
       }
@@ -26,13 +25,15 @@
   </head>
   <body>
     <div id="map"></div>
-    <script src="http://maps/tesoro/movingmap.js"></script>
+    <script src="http://tesoro/tesoro/movingmap.js"></script>
     <script>
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let url = new URL(document.URL);
-        console.log('Querying ' + [...url.searchParams]);
-        Tesoro_query(url);
+        let channel = prompt('Enter channel URL:', 'http://host/path/observation.json');
+        if (channel != null) {
+          console.log('Fetching ' + channel);
+          Tesoro_fetch(channel);
+        }
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
       }
