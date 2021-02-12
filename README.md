@@ -58,7 +58,7 @@ in decimal degrees, and a label, and renders a map centered at those
 coordinates. This is an easy way to view a static map from any computer
 on the same network.
 
-<http://maps/tesoro/query.html?LAT=39.7943071&LON=-105.1533805>
+<http://maps/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z>
 
 The draganddrop page renders a dynamic moving map display from data
 collected using Hazer and fed to it via the Diminuto observation
