@@ -326,7 +326,7 @@ function Tesoro_query(url) {
   let msl = null
   let lbl = null
 
-  const querying = 'q';
+  const QUERYING = 'q';
 
   Tesoro_state = QUERYING;
 
