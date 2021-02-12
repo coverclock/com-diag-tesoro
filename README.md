@@ -66,10 +66,20 @@ feature via an initial drag-and-drop of the observation file. A marker
 shows the target being tracked, and the map pans to keep the marker
 centered. Clicking on the marker shows the time in UTC at which the
 position was determined. This can be done in real-time or by playing back
-a CSV file collected in the past. (The fun/tesoroplayback.sh script in
+a CSV file collected in the past. (The fun/tesorodraganddrop.sh script in
 the Hazer repository is an example of the latter.)
 
 <http://maps/tesoro/draganddrop.html>
+
+The choosefile page renders a map from a JSON file selected by the
+user from a pop-up menu.
+
+<http://maps/tesoro/choosefile.html>
+
+The selectchannel page renders a map from JSON fetched via a URL
+endered by the user.
+
+<http://maps/tesoro/selectchannel.html>
 
 # Turning the safeties off Firefox (DANGEROUS)
 
