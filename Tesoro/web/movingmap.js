@@ -284,7 +284,7 @@ function Tesoro_fetch(channel) {
 
   const PERIOD = 1000;
 
-  const FETCHING = 'F';
+  const FETCHING = 'f';
 
   let data = { NAM: '', NUM: 0, TIM: 0, LAT: 0, LON: 0, MSL: 0, LBL: '' }
 
@@ -310,5 +310,40 @@ function Tesoro_fetch(channel) {
   // policies in Apache prevent the same URL from being fetched more than once.
 
   Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
+
+}
+
+/// @function Tesoro_query
+/// Given a URL, use the query parameters to render a map.
+/// @param {url} is a URL, perhaps from the current document.
+function Tesoro_query(url) {
+
+  let nam = null
+  let num = null
+  let tim = null
+  let lat = null
+  let lon = null
+  let msl = null
+  let lbl = null
+
+  const querying = 'q';
+
+  Tesoro_state = QUERYING;
+
+  try {
+    nam = url.searchParams.get('NAM');
+    num = url.searchParams.get('NUM') + 0;
+    tim = url.searchParams.get('TIM') + 0;
+    lat = url.searchParams.get('LAT') + 0.0;
+    lon = url.searchParams.get('LON') + 0.0;
+    msl = url.searchParams.get('MSL') + 0.0;
+    lbl = url.searchParams.get('LBL');
+  } catch (iregrettoinformyou) {
+    console.log('Error ' + [...url.searchParams] + ' ' + iregrettoinformyou);
+    Tesoro_report('Querying');
+    return;
+  }
+
+  Tesoro_render(nam, num, tim, lat, lon, msl, lbl);
 
 }
