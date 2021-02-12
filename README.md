@@ -156,6 +156,8 @@ there is no sound hardware.
 
 <https://eng.lyft.com/how-lyft-discovered-openstreetmap-is-the-freshest-map-for-rideshare-a7a41bf92ec>
 
+<https://www.digitalocean.com/community/questions/blocked-by-cors-policy-the-access-control-allow-origin-mean-stack>
+
 # References
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
