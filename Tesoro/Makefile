@@ -56,4 +56,4 @@ ${WWW}/selectchannel.html:	${CLIENT}/selectchannel.html ${BASE}
 	cp $< $@
 
 ${WWW}/movingmap.js:	${CLIENT}/movingmap.js ${BASE}
-	cp $< $@
+	terser < $< > $@

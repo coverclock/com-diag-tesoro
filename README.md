@@ -108,6 +108,10 @@ there is no sound hardware.
 
 (More about necessary kazam options to come.)
 
+# Dependencies
+
+    npm install terser -g
+
 # Videos
 
 <https://youtu.be/SUQuxQnq9yk>
@@ -122,7 +126,7 @@ there is no sound hardware.
 
 <http://cdn.leafletjs.com/leaflet/v1.7.1/leaflet.zip>
 
-# References
+# Resources
 
 <https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi>
 
@@ -152,6 +156,6 @@ there is no sound hardware.
 
 <https://eng.lyft.com/how-lyft-discovered-openstreetmap-is-the-freshest-map-for-rideshare-a7a41bf92ec>
 
-# Resources
+# References
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
