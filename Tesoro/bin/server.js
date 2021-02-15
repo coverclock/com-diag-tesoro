@@ -38,13 +38,15 @@ const httpoptions = { };
 
 let producer = http.createServer(httpoptions, (request, response) => {
   if (output != null) {
-    console.log('Requested ' + request);
     console.log('Responding ' + output);
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    response.setHeader('Access-Control-Allow-Methods', '*');
     response.end(output);
   } else {
-    res.statusCode = 404;
+    response.statusCode = 404;
   }
 });
 
@@ -67,17 +69,18 @@ consumer.on('listening', () => {
 let output = null;
 
 consumer.on('message', (input, endpoint) => {
-  console.log('Received ' + input + ' ' + endpoint.address + ':' + endpoint.port);
+  console.log('Receiver ' + endpoint.address + ' ' + endpoint.port);
   try {
     let datagram = JSON.parse(input);
     const nam = datagram.NAM.length;
     datagram.NUM = parseInt(datagram.NUM, 10);
     datagram.TIM = parseInt(datagram.TIM, 10);
     datagram.LAT = parseFloat(datagram.LAT);
-    datagram.LON = parseFLoat(datagram.LON);
-    datagram.MSL = parseFLoat(datagram.MSL);
+    datagram.LON = parseFloat(datagram.LON);
+    datagram.MSL = parseFloat(datagram.MSL);
     const lbl = datagram.LBL.length;
     output = JSON.stringify(datagram);
+    console.log('Received ' + output);
   } catch (iregrettoinformyou) {
     console.log('Parse ' + input + ' ' + iregrettoinformyou);
   }
@@ -87,12 +90,12 @@ consumer.on('message', (input, endpoint) => {
 // STARTER
 //
 
-function starter(address, source, sink) {
+function starter(address, family, source, sink) {
 
-  console.log('Start ' + address + ' ' + source + ' ' + sink);
+  console.log('Start ' + address + ' ' + family + ' '  + source + ' ' + sink);
 
   producer.listen(source, address, () => {
-    console.log('Producer http://' + address + ':' + source);
+    console.log('Producer ' + address + ' ' + source);
   });
 
   consumer.bind(sink);
@@ -133,14 +136,9 @@ if (sourceport != null) {
 // RESOLVE HOST NAME
 //
 
-let address = null;
-
 const dnsoptions = { family: 6, hints: dns.ADDRCONFIG | dns.V4MAPPED, };
 
-dns.lookup(hostname, dnsoptions, (error, resolution, family) => {
-  console.log('Hostname ' + hostname + ' ' + resolution + ' IPv' + family);
-  if (resolution != null) {
-    address = resolution;
-    starter(address, source, sink);
-  }
+dns.lookup(hostname, dnsoptions, (error, address, family) => {
+  console.log('Hostname ' + hostname + ' ' + address + ' IPv' + family);
+  starter(address, family, source, sink);
 });

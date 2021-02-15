@@ -18,11 +18,11 @@ LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
-.PHONY:	all install push leaflet show
+.PHONY:	all install leaflet show
 
-all:	push
+all:
 
-push:	${BASE} ${FILES}
+install:	${BASE} ${FILES}
 
 leaflet:	${BASE}
 	T=`mktemp "$(TMPDIR)/$(ARCHIVE)-XXXXXXXXXX"`; \
@@ -56,4 +56,6 @@ ${WWW}/base.json:	${SOURCE}/base.json ${BASE}
 	cp $< $@
 
 ${WWW}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
-	terser < $< > $@
+	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"`; \
+	terser < $< > $$T && \
+	mv -i $$T $@
