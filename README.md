@@ -158,6 +158,8 @@ there is no sound hardware.
 
 <https://www.digitalocean.com/community/questions/blocked-by-cors-policy-the-access-control-allow-origin-mean-stack>
 
+<https://nodejs.org/api/dgram.html>
+
 # References
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
