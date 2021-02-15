@@ -158,7 +158,17 @@ there is no sound hardware.
 
 <https://www.digitalocean.com/community/questions/blocked-by-cors-policy-the-access-control-allow-origin-mean-stack>
 
+<https://nodejs.org/api/http.html>
+
+<https://nodejs.org/api/net.html>
+
 <https://nodejs.org/api/dgram.html>
+
+<https://en.wikipedia.org/wiki/Cross-origin_resource_sharing>
+
+<https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers>
+
+<https://stackoverflow.com/questions/49447449/how-to-get-the-port-number-from-the-service-name-using-nodejs>
 
 # References
 
