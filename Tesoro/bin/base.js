@@ -1,3 +1,10 @@
+/// @file base.js
+/// Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA.
+/// Licensed under the terms in LICENSE.txt.
+/// <https://github.com/coverclock/com-diag-tesoro>
+/// <mailto: mailto:coverclock@diag.com>
+/// Stand up a trivial web server that responds with the DGNSS base location.
+
 const http = require('http');
 
 const hostname = 'tesoro';

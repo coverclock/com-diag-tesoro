@@ -1,3 +1,10 @@
+/// @file helloworld.js
+/// Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA.
+/// Licensed under the terms in LICENSE.txt.
+/// <https://github.com/coverclock/com-diag-tesoro>
+/// <mailto: mailto:coverclock@diag.com>
+/// Stand up a trivial web server.
+
 const http = require('http');
 
 const hostname = '127.0.0.1';
