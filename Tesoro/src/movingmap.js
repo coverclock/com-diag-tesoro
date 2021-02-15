@@ -176,11 +176,11 @@ function Tesoro_extract(record) {
 
   try {
     nam = record.NAM;
-    num = record.NUM + 0;
-    tim = record.TIM + 0;
-    lat = record.LAT + 0.0;
-    lon = record.LON + 0.0;
-    msl = record.MSL + 0.0;
+    num = parseInt(record.NUM, 10);
+    tim = parseInt(record.TIM, 10);
+    lat = parseFloat(record.LAT);
+    lon = parseFloat(record.LON);
+    msl = parseFloat(record.MSL);
     lbl = record.LBL;
   } catch(iregrettoinformyou) {
     console.log('Error ' + record + ' ' + iregrettoinformyou);
@@ -332,11 +332,11 @@ function Tesoro_query(url) {
 
   try {
     nam = url.searchParams.get('NAM');
-    num = url.searchParams.get('NUM') + 0;
-    tim = url.searchParams.get('TIM') + 0;
-    lat = url.searchParams.get('LAT') + 0.0;
-    lon = url.searchParams.get('LON') + 0.0;
-    msl = url.searchParams.get('MSL') + 0.0;
+    num = parseInt(url.searchParams.get('NUM'), 10);
+    tim = parseInt(url.searchParams.get('TIM'), 10);
+    lat = parseFloat(url.searchParams.get('LAT'));
+    lon = parseFLoat(url.searchParams.get('LON'));
+    msl = parseFLoat(url.searchParams.get('MSL'));
     lbl = url.searchParams.get('LBL');
   } catch (iregrettoinformyou) {
     console.log('Error ' + [...url.searchParams] + ' ' + iregrettoinformyou);
