@@ -25,7 +25,9 @@ let Tesoro_map = null;
 let Tesoro_youarehere = null;
 
 let Tesoro_state = null;
+
 const TESORO_STALLED = 's';
+
 let Tesoro_stall = 0;
 
 /// @function Tesoro_render
@@ -49,7 +51,11 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
   const WAITING = 'w';
   const MOVING = 'm';
 
-  if (Tesoro_map == null) {
+  if (Tesoro_state == TESORO_STALLED) {
+
+    // Do nothing.
+
+  } else if (Tesoro_map == null) {
 
     const url = new URL(document.URL);
     let tileserver = url.origin + '/hot/{z}/{x}/{y}.png';
@@ -224,9 +230,7 @@ let Tesoro_timer = null;
 /// @param {observation} is the File object that is the observation file.
 function Tesoro_read(observation) {
 
-  const PERIOD = 500;
-
-  const RESTART = 'R';
+  const PERIOD = 1000;
 
   // Read the datagram from the observation.
 
@@ -237,13 +241,16 @@ function Tesoro_read(observation) {
     Tesoro_parse(datagram);
     if (Tesoro_state != TESORO_STALLED) {
       Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
+    } else if (Tesoro_timer != null) {
+      clearTimeout(Tesoro_timer);
+    } else {
+      // Do nothing.
     }
   };
 
   consumer.onerror = function(sothishappened) {
     console.log('Error ' + observation.name + ' ' + consumer.error);
     Tesoro_report('Restarting');
-    Tesoro_state = RESTART;
     // The automatic restart doesn't work. My guess is that the File
     // object that observable points to is (perhaps deliberately)
     // contaminated by the handling of the NotReadableError in the
@@ -265,18 +272,18 @@ function Tesoro_read(observation) {
 /// @param {observation} is the File object that is the observation file.
 function Tesoro_file(observation) {
 
-  const READING = 'r';
-
   // This doesnt' work reliably, although it can run for many minutes and
   // is easily restarted manually by the user. I think the problem is a
   // lock conflict between Firefox (the browser with which I typically test)
   // and the renameat(2) system call used by the Diminuto observation feature.
 
   try {
-    if (Tesoro_timer != null) { clearTimeout(Tesoro_timer); }
-    console.log('Observing ' + observation.name);
+    if (Tesoro_timer != null) {
+      clearTimeout(Tesoro_timer);
+    }
+    console.log('File ' + observation.name);
     Tesoro_report('Reading');
-    Tesoro_state = READING;
+    Tesoro_state = null;
     Tesoro_read(observation);
   } catch (iregrettoinformyou) {
     console.log('Error ' + observation.name + ' ' + iregrettoinformyou);
@@ -291,11 +298,7 @@ function Tesoro_fetch(channel) {
 
   const PERIOD = 1000;
 
-  const FETCHING = 'f';
-
   let data = { NAM: '', NUM: 0, TIM: 0, LAT: 0, LON: 0, MSL: 0, LBL: '' }
-
-  Tesoro_state = FETCHING;
 
   fetch(channel, {
     method: 'POST',
@@ -318,8 +321,22 @@ function Tesoro_fetch(channel) {
 
   if (Tesoro_state != TESORO_STALLED) {
     Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
+  } else if (Tesoro_timer != null) {
+    clearTimeout(Tesoro_timer);
+  } else {
+    // Do nothing.
   }
 
+}
+
+/// @function Tesoro_channel
+/// Start the channel fetch.
+/// @param {channel} is the URL to an observation file.
+function Tesoro_channel(channel) {
+  console.log('Channel ' + channel);
+  Tesoro_report('Fetching');
+  Tesoro_state = null;
+  Tesoro_fetch(channel);
 }
 
 /// @function Tesoro_query
@@ -335,21 +352,18 @@ function Tesoro_query(url) {
   let msl = null
   let lbl = null
 
-  const QUERYING = 'q';
-
-  Tesoro_state = QUERYING;
-
+  console.log('Query ' + [...url.searchParams]);
+  Tesoro_report('Querying');
   try {
     nam = url.searchParams.get('NAM');
     num = parseInt(url.searchParams.get('NUM'), 10);
     tim = parseInt(url.searchParams.get('TIM'), 10);
     lat = parseFloat(url.searchParams.get('LAT'));
-    lon = parseFLoat(url.searchParams.get('LON'));
-    msl = parseFLoat(url.searchParams.get('MSL'));
+    lon = parseFloat(url.searchParams.get('LON'));
+    msl = parseFloat(url.searchParams.get('MSL'));
     lbl = url.searchParams.get('LBL');
   } catch (iregrettoinformyou) {
     console.log('Error ' + [...url.searchParams] + ' ' + iregrettoinformyou);
-    Tesoro_report('Querying');
     return;
   }
 

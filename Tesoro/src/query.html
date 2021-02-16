@@ -32,7 +32,6 @@
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         console.log('URL ' + document.URL);
         let url = new URL(document.URL);
-        console.log('Querying ' + [...url.searchParams]);
         Tesoro_query(url);
       } else {
         console.log('HTML5 file APIs not supported on this platform.');
