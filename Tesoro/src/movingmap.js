@@ -51,10 +51,14 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   if (Tesoro_map == null) {
 
+    const url = new URL(document.URL);
+    let tileserver = url.origin + '/hot/{z}/{x}/{y}.png';
+    console.log('Initializing ' + tileserver);
+
     // Initialize leaflet. This should be done once and only once.
 
     Tesoro_map = L.map('map', { center: [ lat, lon ], zoom: 18 });
-    L.tileLayer('http://tesoro/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(Tesoro_map);
+    L.tileLayer(tileserver, { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(Tesoro_map);
     L.control.scale().addTo(Tesoro_map);
     Tesoro_youarehere = L.marker([ lat, lon ]);
     Tesoro_youarehere.addTo(Tesoro_map).bindPopup(lbl);
