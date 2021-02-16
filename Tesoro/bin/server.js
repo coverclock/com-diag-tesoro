@@ -1,15 +1,22 @@
-/// @file observation.js
+/// @file channel.js
 /// Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA.
 /// Licensed under the terms in LICENSE.txt.
 /// <https://github.com/coverclock/com-diag-tesoro>
 /// <mailto: mailto:coverclock@diag.com>
+///
 /// Stand up a web server the responds to http requests with the latest
-/// Hazer datagram containing a Tesoro JSON message. The input UDP port
-/// is "tesoro", and the output TCP port is also "tesoro", as defined in
-/// the /etc/services file.
-/// usage: node server.js [ serveraddress [ sinkport [ sourceport ] ] ]
-/// default: node server.js [ localhost [ tesoro [ tesoro ] ] ]
-/// WORK IN PROGRESS
+/// Hazer datagram containing a Tesoro JSON message. The default input UDP port
+/// is "tesoro", and the default output TCP port is also "tesoro", as defined
+/// in the /etc/services file. In the context of Tesoro, this data communication
+/// path is referred to as a "channel".
+///
+/// Note that this application specifies IPv6 instead of IPv4 as a default
+/// address family because IPv6 sockets can also receive IPv4, but vice versa
+/// is typically not the case.
+///
+/// usage: node channel.js [ address [ sinkport [ sourceport ] ] ]
+/// default: node channel.js [ localhost [ tesoro [ tesoro ] ] ]
+/// example: node channel.js [ 192.168.1.253 [ 22020 [ 22020 ] ] ]
 
 //
 // DEFAULTS
@@ -92,7 +99,7 @@ consumer.on('message', (input, endpoint) => {
 
 function starter(address, family, source, sink) {
 
-  console.log('Start ' + address + ' ' + family + ' '  + source + ' ' + sink);
+  console.log('Start ' + address + ' IPv' + family + ' '  + source + ' ' + sink);
 
   producer.listen(source, address, () => {
     console.log('Producer ' + address + ' ' + source);
@@ -103,7 +110,7 @@ function starter(address, family, source, sink) {
 }
 
 //
-// PARSE COMMAND LINE OPTIONS
+// ACQUIRE COMMAND LINE ARGUMENTS
 //
 
 let vector = process.argv.slice(2);
@@ -113,27 +120,47 @@ if (vector.length > 1) { incoming = vector[1]; outgoing = vector[2]; }
 if (vector.length > 2) { outgoing = vector[2]; }
 
 //
-// RESOLVE SERVICE NAME (seriously?)
+// RESOLVE SERVICE NAME
 //
 
 const services = fs.readFileSync('/etc/services').toString();
 
-const sinkline = services.match(incoming + ".*udp");
-const sinkport = sinkline[0].match("[0-9]+")
-if (sinkport != null) {
-  sink = parseInt(sinkport, 10);
-  console.log('Sink ' + incoming + ' ' + sink);
+let sinktemp = parseInt(incoming, 10);
+if (!isNaN(sinktemp)) {
+  sink = sinktemp;
+} else if (services != null) {
+  const sinkline = services.match(incoming + ".*udp");
+  if (sinkline != null) {
+    const sinkport = sinkline[0].match("[0-9]+")
+    if (sinkport != null) {
+      sinktemp = parseInt(sinkport, 10);
+      if (!isNaN(sinktemp)) {
+        sink = sinktemp;
+      }
+    }
+  }
 }
+console.log('Sink ' + incoming + ' ' + sink);
 
-const sourceline = services.match(outgoing + ".*tcp");
-const sourceport = sourceline[0].match("[0-9]+")
-if (sourceport != null) {
-  source = parseInt(sourceport, 10);
-  console.log('Source ' + outgoing + ' ' + source);
+let sourcetemp = parseInt(outgoing);
+if (!isNaN(sourcetemp)) {
+  source = sourcetemp;
+} else if (services != null) {
+  const sourceline = services.match(outgoing + ".*tcp");
+  if (sourceline != null) {
+    sourceport = sourceline[0].match("[0-9]+")
+    if (sourceport != null) {
+      sourcetemp = parseInt(sourceport, 10);
+      if (!isNaN(sourcetemp)) {
+        source = sourcetemp;
+      }
+    }
+  }
 }
+console.log('Source ' + outgoing + ' ' + source);
 
 //
-// RESOLVE HOST NAME
+// RESOLVE HOST NAME AND START
 //
 
 const dnsoptions = { family: 6, hints: dns.ADDRCONFIG | dns.V4MAPPED, };
