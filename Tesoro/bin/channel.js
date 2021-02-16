@@ -44,6 +44,7 @@ const fs = require('fs');
 const httpoptions = { };
 
 let producer = http.createServer(httpoptions, (request, response) => {
+  console.log('Receiver ' + request.socket.remoteAddress + ' ' + request.socket.remotePort);
   if (output != null) {
     console.log('Responding ' + output);
     response.statusCode = 200;
@@ -76,7 +77,7 @@ consumer.on('listening', () => {
 let output = null;
 
 consumer.on('message', (input, endpoint) => {
-  console.log('Receiver ' + endpoint.address + ' ' + endpoint.port);
+  console.log('Sender ' + endpoint.address + ' ' + endpoint.port);
   try {
     let datagram = JSON.parse(input);
     const nam = datagram.NAM.length;
