@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <script src="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.js"></script>
-    <link rel="stylesheet" href="http://tesoro/tesoro/leaflet/v1.7.1/leaflet.css"></link>
+    <script src="leaflet/v1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="leaflet/v1.7.1/leaflet.css"></link>
     <style>
       html, body {
         height: 100%;
@@ -25,11 +25,11 @@
   </head>
   <body>
     <div id="map"></div>
-    <script src="http://tesoro/tesoro/movingmap.js"></script>
+    <script src="./movingmap.js"></script>
     <script>
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let channel = prompt('Enter channel URL:', 'http://host/path/observation.json');
+        let channel = prompt('Enter channel URL:', 'http://localhost:tesoro/');
         if (channel != null) {
           console.log('Fetching ' + channel);
           Tesoro_fetch(channel);

@@ -21,6 +21,7 @@ LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 .PHONY:	all install leaflet show
 
 all:
+	echo "Did you mean 'make install'?" 1>&2
 
 install:	${BASE} ${FILES}
 
@@ -38,24 +39,25 @@ ${BASE}:
 	sudo chown -R ${OWNER}:${OWNER} ${WWW}
 
 ${WWW}/base.html:	${SOURCE}/base.html ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/query.html:	${SOURCE}/query.html ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/draganddrop.html:	${SOURCE}/draganddrop.html ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/choosefile.html:	${SOURCE}/choosefile.html ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/selectchannel.html:	${SOURCE}/selectchannel.html ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/base.json:	${SOURCE}/base.json ${BASE}
-	cp $< $@
+	cp $< $@ && chmod 664 $@
 
 ${WWW}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
-	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"`; \
+	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"` && \
 	terser < $< > $$T && \
-	mv -i $$T $@
+	mv $$T $@ && \
+    chmod 664 $@

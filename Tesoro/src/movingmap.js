@@ -25,7 +25,7 @@ let Tesoro_map = null;
 let Tesoro_youarehere = null;
 
 let Tesoro_state = null;
-
+const TESORO_STALLED = 's';
 let Tesoro_stall = 0;
 
 /// @function Tesoro_render
@@ -40,7 +40,7 @@ let Tesoro_stall = 0;
 function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   const MODULO = 60;
-  const THRESHOLD = 2;
+  const THRESHOLD = 60;
 
   const INITIALIZING = 'i';
   const HOSTING = 'h';
@@ -82,13 +82,14 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   } else if (num == Tesoro_sequence) {
 
-    // Expected: the sequence NUMber has repeated due to sampling.
+    // Expected: the sequence NUMber has repeated due to sampling or stalling.
 
     if (Tesoro_stall < THRESHOLD) {
       Tesoro_stall = Tesoro_stall + 1;
     } else if (Tesoro_stall == THRESHOLD) {
-      Tesoro_report('Stalling');
+      Tesoro_report('Stalled');
       Tesoro_stall = Tesoro_stall + 1;
+      Tesoro_state = TESORO_STALLED;
     } else  {
       // Do nothing.
     }
@@ -230,7 +231,9 @@ function Tesoro_read(observation) {
   consumer.onload = function(sothishappened) {
     let datagram = sothishappened.target.result
     Tesoro_parse(datagram);
-    Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
+    if (Tesoro_state != TESORO_STALLED) {
+      Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
+    }
   };
 
   consumer.onerror = function(sothishappened) {
@@ -306,10 +309,12 @@ function Tesoro_fetch(channel) {
     Tesoro_report('Refetching');
   });
 
-  // This doesn't work either: typical CORS (Cross-Origin Resource Sharing)
-  // policies in Apache prevent the same URL from being fetched more than once.
+  // If this doesn't work, the Cross-Origin Resource Sharing policies aren't
+  // respecting the CORS headers in the channel's HTTP response.
 
-  Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
+  if (Tesoro_state != TESORO_STALLED) {
+    Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
+  }
 
 }
 
