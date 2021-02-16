@@ -18,12 +18,14 @@ LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
 
-.PHONY:	all install leaflet show
+.PHONY:	all install push leaflet show
 
 all:
-	echo "Did you mean 'make install'?" 1>&2
+	@echo "Did you mean 'make install' or 'make push'?" 1>&2
 
-install:	${BASE} ${FILES}
+install:	push
+
+push:	${BASE} ${FILES}
 
 leaflet:	${BASE}
 	T=`mktemp "$(TMPDIR)/$(ARCHIVE)-XXXXXXXXXX"`; \
