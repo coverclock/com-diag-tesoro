@@ -81,4 +81,4 @@ ${WWW}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
 	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"` && \
 	terser < $< > $$T && \
 	mv $$T $@ && \
-    chmod ${MODE} $@
+	chmod ${MODE} $@

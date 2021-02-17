@@ -28,6 +28,12 @@ Wheat Ridge CO 80033 USA
 <http://www.diag.com>    
 <mailto:coverclock@diag.com>    
 
+# Disclaimer
+
+I was not a web developer before tackling this project.
+I am still not a web developer.
+JavaScript will not be appearing on my resume.
+
 # Abstract
 
 Tesoro is an integration of my Hazer software with OpenStreetMaps
@@ -171,6 +177,8 @@ there is no sound hardware.
 <https://stackoverflow.com/questions/49447449/how-to-get-the-port-number-from-the-service-name-using-nodejs>
 
 <https://enable-cors.org/server_apache.html>
+
+<https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
 
 # References
 

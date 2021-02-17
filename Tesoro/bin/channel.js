@@ -47,14 +47,14 @@ let producer = http.createServer(httpoptions, (request, response) => {
   console.log('Receiver ' + request.socket.remoteAddress + ' ' + request.socket.remotePort);
   if (output != null) {
     console.log('Responding ' + output);
-    response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Headers', '*');
     response.setHeader('Access-Control-Allow-Methods', '*');
+    response.writeHead(200);
     response.end(output);
   } else {
-    response.statusCode = 404;
+    response.writeHead(404);
   }
 });
 

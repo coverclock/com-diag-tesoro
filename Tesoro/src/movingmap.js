@@ -5,6 +5,10 @@
 /// <mailto: mailto:coverclock@diag.com>
 /// Renders a continuous moving-map display in real-time or from playback.
 
+const TESORO_PERIOD = 500;
+const TESORO_THRESHOLD = 120;
+const TESORO_MODULO = 10;
+
 let Tesoro_host = '?';
 let Tesoro_sequence = 0;
 let Tesoro_epoch = 0;
@@ -40,9 +44,6 @@ let Tesoro_stall = 0;
 /// @param {msl} is the altitude in meters above mean sea level.
 /// @param {lbl} is a label to apply to the marker on the map.
 function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
-
-  const MODULO = 10;
-  const THRESHOLD = 60;
 
   const INITIALIZING = 'i';
   const HOSTING = 'h';
@@ -85,7 +86,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     // Unexpected: the host NAMe has changed.
 
-    if ((Tesoro_state != HOSTING) || ((Tesoro_sequence % MODULO) == 0)) {
+    if ((Tesoro_state != HOSTING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       console.log('NAM ' + nam);
       Tesoro_report('Hosting');
       Tesoro_state = HOSTING;
@@ -95,12 +96,12 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     // Expected: the sequence NUMber has repeated due to sampling or stalling.
 
-    if (Tesoro_stall < THRESHOLD) {
+    if (Tesoro_stall < TESORO_THRESHOLD) {
       Tesoro_stall = Tesoro_stall + 1;
-    } else if (Tesoro_stall == THRESHOLD) {
+    } else if (Tesoro_stall == TESORO_THRESHOLD) {
       Tesoro_report('Stalling');
       Tesoro_state = TESORO_STALLED;
-      alert('Stalled ' + Tesoro_sequence + ' ' + Tesoro_stall);
+      alert('Stalled');
       Tesoro_stall = Tesoro_stall + 1;
     } else  {
       // Do nothing.
@@ -110,7 +111,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     // Unexpected: the sequence NUMber has run backwards.
 
-    if ((Tesoro_state != SEQUENCING) || ((Tesoro_sequence % MODULO) == 0)) {
+    if ((Tesoro_state != SEQUENCING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       console.log('NUM ' + num);
       Tesoro_report('Repeating');
       Tesoro_state = SEQUENCING;
@@ -122,7 +123,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     // Unexpected: the epoch TIMe has not advanced.
 
-    if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % MODULO) == 0)) {
+    if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       console.log('TIM ' + tim);
       Tesoro_report('Retrograding');
       Tesoro_state = EPOCHING;
@@ -141,7 +142,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
     Tesoro_meansealevel = msl;
     Tesoro_label = lbl;
 
-    if ((Tesoro_state != WAITING) || ((Tesoro_sequence % MODULO) == 0)) {
+    if ((Tesoro_state != WAITING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       Tesoro_report('Stationary');
       Tesoro_state = WAITING;
     }
@@ -168,7 +169,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
     Tesoro_meansealevel = msl;
     Tesoro_label = lbl;
 
-    if ((Tesoro_state != MOVING) || ((Tesoro_sequence % MODULO) == 0)) {
+    if ((Tesoro_state != MOVING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       Tesoro_report('Moving');
       Tesoro_state = MOVING;
     }
@@ -204,7 +205,7 @@ function Tesoro_extract(record) {
     lbl = record.LBL;
   } catch(iregrettoinformyou) {
     console.log('Error ' + record + ' ' + iregrettoinformyou);
-    Tesoro_report('Extracting');
+    Tesoro_report('Extracted');
     return;
   }
 
@@ -224,7 +225,7 @@ function Tesoro_parse(datagram) {
     record = JSON.parse(datagram);
   } catch(iregrettoinformyou) {
     console.log('Error ' + datagram + ' ' + iregrettoinformyou);
-    Tesoro_report('Parsing');
+    Tesoro_report('Parsed');
     return;
   }
 
@@ -239,8 +240,6 @@ let Tesoro_timer = null;
 /// @param {observation} is the File object that is the observation file.
 function Tesoro_read(observation) {
 
-  const PERIOD = 500;
-
   // Read the datagram from the observation.
 
   let consumer = new FileReader();
@@ -249,7 +248,7 @@ function Tesoro_read(observation) {
     let datagram = sothishappened.target.result
     Tesoro_parse(datagram);
     if (Tesoro_state != TESORO_STALLED) {
-      Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
+      Tesoro_timer = setTimeout(Tesoro_read, TESORO_PERIOD, observation);
     } else if (Tesoro_timer != null) {
       clearTimeout(Tesoro_timer);
     } else {
@@ -259,17 +258,7 @@ function Tesoro_read(observation) {
 
   consumer.onerror = function(sothishappened) {
     console.log('Error ' + observation.name + ' ' + consumer.error);
-    Tesoro_report('Restarting');
-    // The automatic restart doesn't work. My guess is that the File
-    // object that observable points to is (perhaps deliberately)
-    // contaminated by the handling of the NotReadableError in the
-    // FileReader. This is why restarting the moving map by reselecting
-    // works: it generates a new File object. This leaves open the question
-    // of why the NotReadableError occurs in the first place, and
-    // almost always near the beginning of observation stream, and a
-    // subsequent manual restart sometimes runs to completion over the
-    // span of many minutes.
-    // Tesoro_timer = setTimeout(Tesoro_read, PERIOD, observation);
+    Tesoro_report('Read');
     alert('Reselect ' + observation.name + ' ' + consumer.error);
   }
 
@@ -296,6 +285,7 @@ function Tesoro_file(observation) {
     Tesoro_read(observation);
   } catch (iregrettoinformyou) {
     console.log('Error ' + observation.name + ' ' + iregrettoinformyou);
+    Tesoro_report('Filed');
   }
 
 }
@@ -305,12 +295,12 @@ function Tesoro_file(observation) {
 /// @param {channel} is the URL to an observation file.
 function Tesoro_fetch(channel) {
 
-  const PERIOD = 500;
-
-  let data = { NAM: '', NUM: 0, TIM: 0, LAT: 0, LON: 0, MSL: 0, LBL: '' }
+  let data = {};
 
   fetch(channel, {
     method: 'POST',
+    mode: 'cors',
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -319,22 +309,18 @@ function Tesoro_fetch(channel) {
   .then(response => response.json())
   .then(data => {
     Tesoro_extract(data);
+    if (Tesoro_state != TESORO_STALLED) {
+      Tesoro_timer = setTimeout(Tesoro_fetch, TESORO_PERIOD, channel);
+    } else if (Tesoro_timer != null) {
+      clearTimeout(Tesoro_timer);
+    } else {
+      // Do nothing.
+    }
   })
   .catch((iregrettoinformyou) => {
     console.log('Error ' + channel + ' ' + iregrettoinformyou);
-    Tesoro_report('Refetching');
+    Tesoro_report('Fetched');
   });
-
-  // If this doesn't work, the Cross-Origin Resource Sharing policies aren't
-  // respecting the CORS headers in the channel's HTTP response.
-
-  if (Tesoro_state != TESORO_STALLED) {
-    Tesoro_timer = setTimeout(Tesoro_fetch, PERIOD, channel);
-  } else if (Tesoro_timer != null) {
-    clearTimeout(Tesoro_timer);
-  } else {
-    // Do nothing.
-  }
 
 }
 
@@ -373,6 +359,7 @@ function Tesoro_query(url) {
     lbl = url.searchParams.get('LBL');
   } catch (iregrettoinformyou) {
     console.log('Error ' + [...url.searchParams] + ' ' + iregrettoinformyou);
+    Tesoro_report('Queried');
     return;
   }
 

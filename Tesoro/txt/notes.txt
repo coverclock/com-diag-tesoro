@@ -544,3 +544,12 @@ open(2):
 NS_IMETHODIMP FilePickerParent::IORunnable::Run()
 
 sudo mount -t tmpfs -o size=1M,uid=jsloan,gid=jsloan,mode=0755 tmpfs /var/www/html/tesoro/channel
+
+sudo vi /etc/apache2/apache2.conf
+sudo apachectl -t
+sudo service apache2 reload
+sudo systemctl restart apache2
+sudo view /var/log/apache2/error.log
+
+wget -d -v -S http://localhost:22020/location.json
+
