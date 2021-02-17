@@ -98,8 +98,9 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
       Tesoro_stall = Tesoro_stall + 1;
     } else if (Tesoro_stall == THRESHOLD) {
       Tesoro_report('Stalled');
-      Tesoro_stall = Tesoro_stall + 1;
       Tesoro_state = TESORO_STALLED;
+      alert('Stalled ' + Tesoro_sequence + ' ' + Tesoro_stall);
+      Tesoro_stall = Tesoro_stall + 1;
     } else  {
       // Do nothing.
     }
