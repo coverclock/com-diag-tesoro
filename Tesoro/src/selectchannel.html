@@ -29,7 +29,7 @@
     <script>
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let channel = prompt('Enter channel URL:', 'http://localhost:22020/channel.json');
+        let channel = prompt('Enter channel URL:', 'http://HOSTNAME:22020/channel.json');
         if (channel != null) {
           Tesoro_channel(channel);
         }
