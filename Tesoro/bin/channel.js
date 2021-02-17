@@ -77,20 +77,26 @@ consumer.on('listening', () => {
 let output = null;
 
 consumer.on('message', (input, endpoint) => {
-  console.log('Sender ' + endpoint.address + ' ' + endpoint.port);
-  try {
-    let datagram = JSON.parse(input);
-    const nam = datagram.NAM.length;
-    datagram.NUM = parseInt(datagram.NUM, 10);
-    datagram.TIM = parseInt(datagram.TIM, 10);
-    datagram.LAT = parseFloat(datagram.LAT);
-    datagram.LON = parseFloat(datagram.LON);
-    datagram.MSL = parseFloat(datagram.MSL);
-    const lbl = datagram.LBL.length;
-    output = JSON.stringify(datagram);
-    console.log('Received ' + output);
-  } catch (iregrettoinformyou) {
-    console.log('Parse ' + input + ' ' + iregrettoinformyou);
+  const length = input.length;
+  console.log('Sender ' + endpoint.address + ' ' + endpoint.port + ' ' + length);
+  // Hazer tools like csv2dgm send a zero length datagram when they exit.
+  if (length > 0) {
+    try {
+      // Validate.
+      let datagram = JSON.parse(input);
+      const nam = datagram.NAM.length;
+      datagram.NUM = parseInt(datagram.NUM, 10);
+      datagram.TIM = parseInt(datagram.TIM, 10);
+      datagram.LAT = parseFloat(datagram.LAT);
+      datagram.LON = parseFloat(datagram.LON);
+      datagram.MSL = parseFloat(datagram.MSL);
+      const lbl = datagram.LBL.length;
+      // Normalize.
+      output = JSON.stringify(datagram);
+      console.log('Received ' + output);
+    } catch (iregrettoinformyou) {
+      console.log('Parse ' + input + ' ' + iregrettoinformyou);
+    }
   }
 });
 

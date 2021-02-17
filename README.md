@@ -170,6 +170,8 @@ there is no sound hardware.
 
 <https://stackoverflow.com/questions/49447449/how-to-get-the-port-number-from-the-service-name-using-nodejs>
 
+<https://enable-cors.org/server_apache.html>
+
 # References
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
