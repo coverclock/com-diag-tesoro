@@ -41,7 +41,7 @@ let Tesoro_stall = 0;
 /// @param {lbl} is a label to apply to the marker on the map.
 function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
-  const MODULO = 60;
+  const MODULO = 10;
   const THRESHOLD = 60;
 
   const INITIALIZING = 'i';
@@ -49,6 +49,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
   const SEQUENCING = 'n';
   const EPOCHING = 'e';
   const WAITING = 'w';
+  const MISSING = 'x';
   const MOVING = 'm';
 
   if (Tesoro_state == TESORO_STALLED) {
@@ -97,7 +98,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
     if (Tesoro_stall < THRESHOLD) {
       Tesoro_stall = Tesoro_stall + 1;
     } else if (Tesoro_stall == THRESHOLD) {
-      Tesoro_report('Stalled');
+      Tesoro_report('Stalling');
       Tesoro_state = TESORO_STALLED;
       alert('Stalled ' + Tesoro_sequence + ' ' + Tesoro_stall);
       Tesoro_stall = Tesoro_stall + 1;
@@ -111,7 +112,7 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     if ((Tesoro_state != SEQUENCING) || ((Tesoro_sequence % MODULO) == 0)) {
       console.log('NUM ' + num);
-      Tesoro_report('Sequencing');
+      Tesoro_report('Repeating');
       Tesoro_state = SEQUENCING;
     }
 
@@ -119,28 +120,29 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   } else if (tim <= Tesoro_epoch) {
 
-    // Unexpected: the epoch TIMe has run backwards.
+    // Unexpected: the epoch TIMe has not advanced.
 
     if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % MODULO) == 0)) {
       console.log('TIM ' + tim);
-      Tesoro_report('Epoching');
+      Tesoro_report('Retrograding');
       Tesoro_state = EPOCHING;
     }
 
     Tesoro_stall = 0;
 
-  } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude) && (msl == Tesoro_meansealevel)) {
+  } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude)) {
 
-    // Unusual: the latitude, longitude, and altitude has not changed.
+    // Unusual: the latitude and longitude has not changed.
 
     Tesoro_youarehere.setPopupContent(lbl);
 
     Tesoro_sequence = num;
     Tesoro_epoch = tim;
+    Tesoro_meansealevel = msl;
     Tesoro_label = lbl;
 
     if ((Tesoro_state != WAITING) || ((Tesoro_sequence % MODULO) == 0)) {
-      Tesoro_report('Waiting');
+      Tesoro_report('Stationary');
       Tesoro_state = WAITING;
     }
 
@@ -152,6 +154,12 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
     Tesoro_map.panTo([ lat, lon ]);
     Tesoro_youarehere.setLatLng([ lat, lon ]).setPopupContent(lbl);
+
+    const expected = Tesoro_sequence + 1;
+    if (num > expected) {
+      Tesoro_report('Missing');
+      Tesoro_state = MISSING;
+    }
 
     Tesoro_sequence = num;
     Tesoro_epoch = tim;
@@ -231,7 +239,7 @@ let Tesoro_timer = null;
 /// @param {observation} is the File object that is the observation file.
 function Tesoro_read(observation) {
 
-  const PERIOD = 1000;
+  const PERIOD = 500;
 
   // Read the datagram from the observation.
 
@@ -297,7 +305,7 @@ function Tesoro_file(observation) {
 /// @param {channel} is the URL to an observation file.
 function Tesoro_fetch(channel) {
 
-  const PERIOD = 1000;
+  const PERIOD = 500;
 
   let data = { NAM: '', NUM: 0, TIM: 0, LAT: 0, LON: 0, MSL: 0, LBL: '' }
 
