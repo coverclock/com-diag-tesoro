@@ -41,9 +41,7 @@ const fs = require('fs');
 // TCP HTTP PRODUCER
 //
 
-const httpoptions = { };
-
-let producer = http.createServer(httpoptions, (request, response) => {
+let producer = http.createServer((request, response) => {
   console.log('Receiver ' + request.socket.remoteAddress + ' ' + request.socket.remotePort);
   if (output != null) {
     console.log('Responding ' + output);
