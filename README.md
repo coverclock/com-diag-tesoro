@@ -46,7 +46,17 @@ runs under Ubuntu on a Raspberry Pi. Tesoro processes geolocation data
 represented in JavaScript Object Notation (JSON) form, and visualizes
 it in a static or moving-map display using a web browser.
 
-My geolocation datasets were generated in a simple Comma Separated Value
+Here is a forty-five minute (45m) video (so feel free to skip around)
+of the moving map display, The dataset being played back was generated
+during a drive on 2020-09-17 in which I evaluated a u-blox UBX-NEO-M8U
+device. The UBX-NEO-M8U incorporated both a Global Navigation Satellite
+System (GNSS) receiver and an Inertial Measurement Unit (IMU). FOR BEST
+RESULTS: switch to the High Definition version using the YouTube Settings
+cogwheel in the lower right portion of the display.
+
+<https://youtu.be/GjR7fPQRCZc>
+
+My geolocation datasets are generated in a simple Comma Separated Value
 (CSV) format, intended to be easily imported into a spreadsheet. This
 data was generated in real-time using "gpstool", an application that is
 part of my Hazer project.  Hazer, and its gpstool Swiss Army Knife, is
@@ -75,6 +85,10 @@ Tesoro follows the Model-View-Controller (MVC) pattern. Although all of the
 components could run on the same computer, I typically run them on three
 different computers to simulate how I imagine this might be used in an
 actual application.
+
+Here is a diagram of the architecture as desc4ribed below.
+
+<https://flic.kr/p/2kCThPi>
 
 ## Model
 
@@ -165,6 +179,8 @@ could modify the client-side movingmap JavaScript to use any tile server.
 But right now it assumes the tile server is on the same computer as the
 script itself.
 
+    make install
+
 Run the Hazer "tesoroselectchannel" script on the Rover host. This converts
 a forty-five minute (45m) CSV dataset of an actual Hazer test into JSON
 and meters it out at approximately its original rate as datagrams to the
@@ -192,13 +208,13 @@ the outgoing port uses TCP, they can have the same name.
 Pull up a browser on the View host, and point it to the "selectchannel"
 page on the Model tile server. The URL will look like this
 
-	http://modelhost/tesoro/selectchannel.html
+    http://modelhost/tesoro/selectchannel.html
 
 replacing "modelhost" with the hostname of the tile server. When the
 popup asks for the channel name, type in the URL for the Controller host
 on which the channel script is running
 
-	http://controllerhost:22020/channel.json
+    http://controllerhost:22020/channel.json
 
 where 22020 is the tesoro TCP port number. The JavaScript code will start
 reading the JSON geolocation data from the channel, and using Leaflet
@@ -249,6 +265,8 @@ permissions).
 <http://cdn.leafletjs.com/leaflet/v1.7.1/leaflet.zip>
 
 # Articles
+
+(To come.)
 
 # Images
 
