@@ -7,10 +7,9 @@
 # default: channel `hostname` tesoro tesoro
 
 PROGRAM=$(basename ${0})
-HOSTNAME=${1:-$(hostname)}
-INCOMING=${2:-"tesoro"}
-OUTGOING=${3:-$2}
+INCOMING=${1:-"tesoro"}
+OUTGOING=${2:-$2}
 
 SCRIPT=$(readlink -e $(dirname ${0})/../bin)/channel.js
 
-exec node ${SCRIPT} ${HOSTNAME} ${INCOMING} ${OUTGOING}
+exec node ${SCRIPT} ${INCOMING} ${OUTGOING}

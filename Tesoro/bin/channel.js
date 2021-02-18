@@ -10,19 +10,17 @@
 /// in the /etc/services file. In the context of Tesoro, this data communication
 /// path is referred to as a "channel".
 ///
-/// Note that this application specifies IPv6 instead of IPv4 as a default
-/// address family because IPv6 sockets can also receive IPv4, but vice versa
-/// is typically not the case.
+/// Note that the incoming datagram socket is created using family IPv6.
+/// IPv6 sockets can receive from either IPv4 or IPv6 senders.
 ///
-/// usage: node channel.js [ address [ sinkport [ sourceport ] ] ]
-/// default: node channel.js [ localhost [ tesoro [ tesoro ] ] ]
-/// example: node channel.js [ 192.168.1.253 [ 22020 [ 22020 ] ] ]
+/// usage: node channel.js [ sinkport [ sourceport ] ]
+/// default: node channel.js [ tesoro [ tesoro ] ]
+/// example: node channel.js [ 22020 [ 22020 ] ]
 
 //
 // DEFAULTS
 //
 
-let hostname = 'localhost';
 let incoming = 'tesoro';
 let outgoing = 'tesoro';
 let sink = 22020;
@@ -99,30 +97,13 @@ consumer.on('message', (input, endpoint) => {
 });
 
 //
-// STARTER
-//
-
-function starter(address, family, source, sink) {
-
-  console.log('Start ' + address + ' IPv' + family + ' '  + source + ' ' + sink);
-
-  producer.listen(source, address, () => {
-    console.log('Producer ' + address + ' ' + source);
-  });
-
-  consumer.bind(sink);
-
-}
-
-//
 // ACQUIRE COMMAND LINE ARGUMENTS
 //
 
 let vector = process.argv.slice(2);
 
-if (vector.length > 0) { hostname = vector[0]; }
-if (vector.length > 1) { incoming = vector[1]; outgoing = vector[2]; }
-if (vector.length > 2) { outgoing = vector[2]; }
+if (vector.length > 0) { incoming = vector[0]; outgoing = incoming; }
+if (vector.length > 1) { outgoing = vector[1]; }
 
 //
 // RESOLVE SERVICE NAME
@@ -165,12 +146,13 @@ if (!isNaN(sourcetemp)) {
 console.log('Source ' + outgoing + ' ' + source);
 
 //
-// RESOLVE HOST NAME AND START
+// LISTEN
 //
 
-const dnsoptions = { family: 6, hints: dns.ADDRCONFIG | dns.V4MAPPED, };
+console.log('Start ' + source + ' ' + sink);
 
-dns.lookup(hostname, dnsoptions, (error, address, family) => {
-  console.log('Hostname ' + hostname + ' ' + address + ' IPv' + family);
-  starter(address, family, source, sink);
+producer.listen(source, () => {
+  console.log('Producer ' + source);
 });
+
+consumer.bind(sink);
