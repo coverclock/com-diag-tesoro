@@ -206,8 +206,8 @@ my environment; your mileage may vary.
 
 The directions below detail how to install an OSM tile server on Ubuntu
 20.04. They were straightforward, but due to the amount of data involved
-- the North American map dataset alone is over ten gigabytes (and the
-world map dataset is over a terabyte) - this is a very lengthy process.
+(the North American map dataset alone is over ten gigabytes, and the
+world map dataset is over a terabyte) this is a very lengthy process.
 
 <https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
 
