@@ -76,12 +76,27 @@ components could run on the same computer, I typically run them on three
 different computers to simulate how I imagine this might be used in an
 actual application.
 
+## Model
+
 The Model is the OSM tile server, a software stack and database that
 resides on an Apache web server.
 
+In my environment, I use a Raspberry Pi 4B as the Model, It runs Ubuntu,
+and is equipped with a two terabyte (2TB) Solid State Disk (SSD). The
+SSD currently hosts the OpenStreetMaps map data and database for North
+America. The host name of the Model will be used in the Uniform Resource
+Locator (URL) examples below.
+
+## View
+
 The View can be any modern web browser that can run Tesoro's "movingmap"
-JavaScript program. I have tested Tesoro using Firefox on a x86_64 system
-running Ubuntu, and Firefox, Chrome, and Safari on a Mac running MacOS.
+JavaScript program.
+
+My typical View is the Chrome browser used on a Mac running MacOS.
+I have also run Tesoro using Firefox on a x86_64 system running Ubuntu,
+and Firefox and Safari on a Mac running MacOS.
+
+## Controller
 
 The Controller is the source of the geolocation data and hence steers
 the visualization. It is implemented as Tesoro's "channel" JavaScript
@@ -92,21 +107,21 @@ to any HyperText Transfer Protocol (HTTP) request with the latest JSON
 datagram that it has received over the Transmission Control Protocol
 (TCP) return path.
 
+A typical Controller is one of my x86_64 development systems running
+Ubuntu.
+
+## Rover
+
 In my testing, a fourth component, the Rover, stands in for an actual
 geolocating device in the field by playing back geolocation data
 previously collected and stored in the Comma Separated Value (CSV) form
 used by Hazer's gpstool, and transmitting it as datagrams in JSON form
 to the Controller.
 
-In my environment I use a Raspberry Pi 4B as the Model, It runs Ubuntu,
-and is equipped with a two terabyte (2TB) Solid State Disk (SSD). The
-SSD currently hosts the OpenStreetMaps map data and database for North
-America. The host name of the Model will be used in the Uniform Resource
-Locator (URL) examples below. A typical View is the Chrome browser
-used on a Mac running MacOS. A typical Controller is one of my x86_64
-development servers running Ubuntu. A typical Rover is a Raspberry Pi 3B+
-running Raspbian, which is what I have used as my field unit in much of
-my Hazer work.
+A typical Rover is a Raspberry Pi 3B+ running Raspbian. This is the
+actual mobile platform that I have used as my field unit in much of
+my Hazer work, although I have also used small palmtops and netbooks
+running Linux Mint or Ubuntu Mate with Intel Celeron and Atom processors.
 
 # Examples
 
