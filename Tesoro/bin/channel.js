@@ -13,9 +13,22 @@
 /// Note that the incoming datagram socket is created using family IPv6.
 /// IPv6 sockets can receive from either IPv4 or IPv6 senders.
 ///
-/// usage: node channel.js [ sinkport [ sourceport ] ]
-/// default: node channel.js [ tesoro [ tesoro ] ]
-/// example: node channel.js [ 22020 [ 22020 ] ]
+/// USAGE
+///
+/// node channel.js [ sinkport [ sourceport ] ]
+///
+/// DEFAULT
+///
+/// node channel.js [ tesoro [ tesoro ] ]
+///
+/// EXAMPLES
+///
+/// node channel.js [ 22020 [ 22020 ] ]
+///
+/// TEST
+///
+/// while true; do wget -d -v -S -O - http://HOSTNAME:22020/channel.json 2> /dev/null; echo; sleep 1;  done
+///
 
 //
 // DEFAULTS
