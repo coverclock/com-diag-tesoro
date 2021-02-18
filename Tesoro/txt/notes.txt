@@ -551,5 +551,5 @@ sudo service apache2 reload
 sudo systemctl restart apache2
 sudo view /var/log/apache2/error.log
 
-wget -d -v -S http://localhost:22020/location.json
+wget -d -v -S -O - http://hostname:22020/location.json
 
