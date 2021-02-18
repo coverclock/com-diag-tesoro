@@ -554,6 +554,6 @@ sudo view /var/log/apache2/error.log
 wget -d -v -S -O - http://hostname:22020/location.json
 
 Rover Raspberry Pi 3B+ ARMv7 Raspbian 9.4 “stretch” Linux 4.14
-Model (Apache OSM Tile Server) Raspberry Pi 4B Raspbian 10 “buster” Linux 4.19
+Model (Apache OSM Tile Server) Raspberry Pi 4B Ubuntu 20.04 "focal" Linux 5.4
 View (Chrome) Mac Mini Intel x86_64 MacOS 10.13 “High Sierra”
 Controller (Channel) Intel NUC5i7RYH x86_64 Ubuntu 16.04 “denial” Linux 4.13
