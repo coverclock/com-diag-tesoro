@@ -300,7 +300,7 @@ repositories for more information.)
 
 # Articles
 
-(To come.)
+<https://coverclock.blogspot.com/2021/02/a-moving-map-display-using.html>
 
 # Images
 
