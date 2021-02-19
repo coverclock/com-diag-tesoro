@@ -243,6 +243,16 @@ world map dataset is over a terabyte) this is a very lengthy process.
 
 <https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
 
+These web sites explain how to download map data, initially build the
+map database, and update it when necessary. I was careful to place the
+map data files and the Postgres database files on the ginormous SSD
+instead of on the Raspberry Pi's microSDcard where its root file
+system resides.
+
+<https://download.geofabrik.de>
+
+<https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
+
 The install target in the Tesoro Makefile uses the Node.js terser program
 to minimize the client-side JavaScript code.
 
