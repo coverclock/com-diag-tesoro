@@ -140,7 +140,7 @@ running Linux Mint or Ubuntu Mate with Intel Celeron and Atom processors.
 # Examples
 
 Tesoro's movingmap JavaScript program can be invoked by several different
-web pages.
+web pages. These are described below.
 
 ## Base
 
@@ -173,15 +173,8 @@ server, identified via a URL entered by the user.
 
 A typical Select Channel test set up is as follows. 
 
-Install the client-side Tesoro HTML and JavaScript programs on the Model
-tile server, which runs Apache. If this weren't all behind my firewall, I
-could modify the client-side movingmap JavaScript to use any tile server.
-But right now it assumes the tile server is on the same computer as the
-script itself.
-
-    make install
-
-Run the Hazer "tesoroselectchannel" script on the Rover host. This converts
+Run the Hazer "tesoroselectchannel" script on the Rover host. (You
+will need to have build Diminuto and Hazer beforehand.) This converts
 a forty-five minute (45m) CSV dataset of an actual Hazer test into JSON
 and meters it out at approximately its original rate as datagrams to the
 UDP port defined in /etc/services as "tesoro". This simulates a mobile
@@ -192,7 +185,7 @@ Tesoro existed, using Google Earth as the visualization part). Direct
 the script to the appropriate host and UDP service (port), replacing
 "channelhost" with the actual host name.
 
-    tesoroselectchannel channelhost:tesoro
+    out/host/fun/tesoroselectchannel channelhost:tesoro
 
 Run the Tesoro "channel" script, which runs the "channel" JavaScrip
 program using Node.js), on the Controller host.  This serves as the
@@ -203,7 +196,7 @@ visualization browser. The script takes two arguments, a UDP service
 to receive HTTP requests via TCP. Since the incoming port uses UDP and
 the outgoing port uses TCP, they can have the same name.
 
-    channel tesoro tesoro
+    fun/channel tesoro tesoro
 
 Pull up a browser on the View host, and point it to the "selectchannel"
 page on the Model tile server. The URL will look like this
@@ -248,11 +241,34 @@ to minimize the client-side JavaScript code.
     npm install terser -g
 
 My client-side JavaScript code uses the version 1.7.1 of the Leaflet
-library.  The Tesoro Makefile can automatically fetch this distro,
+library. The Tesoro Makefile can automatically fetch this distro,
 unzip it, and install it on the web server (providing it has the right
 permissions).
 
 <http://cdn.leafletjs.com/leaflet/v1.7.1/leaflet.zip>
+
+Install the client-side Tesoro HTML and JavaScript programs on the Model
+tile server, which runs Apache. If this weren't all behind my firewall, I
+could modify the client-side movingmap JavaScript to use any tile server.
+But right now it assumes the tile server is on the same computer as the
+script itself. All of the Tesoro files are installed in the directory
+
+    /var/www/html/tesoro
+
+which is simplified is you pre-create this directory as root and make
+yourself the owner of it. Then you can, for example,
+
+    cd
+    mkdir -p src
+    git clone https://github.com/coverclock/com-diag-tesoro
+    cd com-diag-tesoro/Tesoro
+    make install
+
+to install both Leaflet and the Tesoro files.
+
+You will also need to build Hazer and Diminuto if you intend to use
+the Hazer test scripts and datasets to duplicate my results. (See those
+repositories for more information.)
 
 # Repositories
 
