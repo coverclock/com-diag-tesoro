@@ -202,7 +202,7 @@ to be a rover) and the client-side movingmap program running in the
 visualization browser. The script takes two arguments, a UDP service
 (port) on which to receive datagrams, and a TCP service (port) on which
 to receive HTTP requests via TCP. Since the incoming port uses UDP and
-the outgoing port uses TCP, they can have the same name.
+the outgoing port uses TCP, they can have the same name and number.
 
     fun/channel tesoro tesoro
 
