@@ -1,7 +1,7 @@
 com-diag-tesoro
 ==============
 
-Using Open Street Maps (OSM) to create a moving map display.
+Using OpenStreetMap (OSM) to create a moving map display.
 
 # Copyright
 
