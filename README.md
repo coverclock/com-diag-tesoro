@@ -35,7 +35,7 @@ a web developer. JavaScript will not be appearing on my resume.
 
 # Abstract
 
-Tesoro is an application of OpenStreetMaps (OSM), an open-source
+Tesoro is an application of OpenStreetMap (OSM), an open-source
 alternative to Google Maps. Its purpose is to integrate my own
 geolocation software with OSM for the purposes of visualizing geolocation
 data streams either in real-time, or as collected and played back. Tesoro
@@ -97,7 +97,7 @@ resides on an Apache web server.
 
 In my environment, I use a Raspberry Pi 4B as the Model, It runs Ubuntu,
 and is equipped with a two terabyte (2TB) Solid State Disk (SSD). The
-SSD currently hosts the OpenStreetMaps map data and database for North
+SSD currently hosts the OpenStreetMap map data and database for North
 America. The host name of the Model will be used in the Uniform Resource
 Locator (URL) examples below.
 
