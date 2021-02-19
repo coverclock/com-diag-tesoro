@@ -79,6 +79,14 @@ to its root 128GB SD card. The visualization portion of Tesoro has been
 tested with FireFox on a x86_64 Ubuntu system, and with FireFox, Chrome,
 and Safari on a x86_64 Macintosh running MacOS Catalina.
 
+# Directories
+
+* bin - contains server-side JavaScript programs to be run under Node.js.
+* fs - contains snippets of changes to the tile server file system.
+* fun - contains BASH scripts for functional testing.
+* src - contains client-side HTML and JavaScript programs to be installed on the tile server.
+* txt - contains mostly unexplained notes about stuff I wanted to remember.
+
 # Architecture
 
 Tesoro follows the Model-View-Controller (MVC) pattern. Although all of the
