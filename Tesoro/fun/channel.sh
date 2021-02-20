@@ -3,8 +3,8 @@
 # Licensed under the terms in LICENSE.txt
 # Chip Overclock <coverclock@diag.com>
 # https://github.com/coverclock/com-diag-tesoro
-# usage: channel HOST UDPPORT TCPPORT
-# default: channel `hostname` tesoro tesoro
+# usage: channel UDPPORT TCPPORT
+# default: channel tesoro tesoro
 
 PROGRAM=$(basename ${0})
 INCOMING=${1:-"tesoro"}
