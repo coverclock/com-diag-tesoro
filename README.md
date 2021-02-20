@@ -87,7 +87,7 @@ and Safari on a x86_64 Macintosh running MacOS Catalina.
 * src - contains client-side HTML and JavaScript programs to be installed on the tile server.
 * txt - contains mostly unexplained notes about stuff I wanted to remember.
 
-# Datagrams (JSON)
+# Fields (JSON)
 
 * NAM - a name string (typically the host name) identifying the data source.
 * NUM - an monotonically increasing integer number.
