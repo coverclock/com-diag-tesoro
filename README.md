@@ -87,6 +87,16 @@ and Safari on a x86_64 Macintosh running MacOS Catalina.
 * src - contains client-side HTML and JavaScript programs to be installed on the tile server.
 * txt - contains mostly unexplained notes about stuff I wanted to remember.
 
+# Datagrams (JSON)
+
+* NAM - a name string (typically the host name) identifying the data source.
+* NUM - an monotonically increasing integer number.
+* TIM - the time in UTC in integer seconds since the POSIX epoch.
+* LAT - the latitude in decimal degrees.
+* LON - the longitude in decimal degrees.
+* MSL - the altitude above mean sea level in decimal meters.
+* LBL - a label string (typically a timestamp) applied to the moving marker.
+
 # Architecture
 
 Tesoro follows the Model-View-Controller (MVC) pattern. Although all of the
@@ -160,14 +170,10 @@ of the tile server is working from any computer on the same network.
 
 ## Query
 
-The query page takes a query URL containing the following fields: a name
-identifying the data source (NAM), a monotonically increasing counter
-(NUM), the GPS solution time in UTC represented in the number of seconds
-since the POSIX epoch (TIM), latitude (LAT) and longitude (LON) in decimal
-degrees, the altitude above mean sea level in meters (MSL), and a label
-(LBL) to be applied to the mark marker. The query page renders a static
-map centered on the specified coordinates.  an easy way to view a static
-map from any computer on the same network.
+The query page takes a query URL containing keyword=value parameters
+for each of the JSON datagrams fields defined above. The query page
+renders a static map centered on the specified coordinates. Query is
+an easy way to view a static map from any computer on the same network.
 
     http://modelhost/tesoro/query.html?NAM=hostname&NUM=1&TIM=1599145249&LAT=39.7943071&LON=-105.1533805&MSL=1710.300&&LBL=2020-09-03T15:00:49Z
 
@@ -202,7 +208,8 @@ to be a rover) and the client-side movingmap program running in the
 visualization browser. The script takes two arguments, a UDP service
 (port) on which to receive datagrams, and a TCP service (port) on which
 to receive HTTP requests via TCP. Since the incoming port uses UDP and
-the outgoing port uses TCP, they can have the same name and number.
+the outgoing port uses TCP, they can have the same service name and
+number.
 
     fun/channel tesoro tesoro
 
@@ -273,8 +280,13 @@ script itself. All of the Tesoro files are installed in the directory
 
     /var/www/html/tesoro
 
-which is simplified is you pre-create this directory as root and make
-yourself the owner of it. Then you can, for example,
+which is simplified if you create this directory as root and make
+yourself the owner of it.
+
+    sudo mkdir -p /var/www/html/tesoro
+    sudo chown ${USER}:${USER} /var/www/html/tesoro
+
+Then you can, for example,
 
     cd
     mkdir -p src
@@ -285,8 +297,8 @@ yourself the owner of it. Then you can, for example,
 to install both Leaflet and the Tesoro files.
 
 You will also need to build Hazer and Diminuto if you intend to use
-the Hazer test scripts and datasets to duplicate my results. (See those
-repositories for more information.)
+the Hazer test scripts and datasets to duplicate my results. See those
+repositories for more information on how to do that.
 
 # Repositories
 
