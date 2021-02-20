@@ -201,6 +201,12 @@ the script to the appropriate host and UDP service (port), replacing
 
     out/host/fun/tesoroselectchannel channelhost:tesoro
 
+NOTE: not all of the datasets generated from field tests stored in
+the Hazer repository are compatible with this script, since the CSV
+format and the number of variables have changed over time. This script
+reflects the CSV format used for the dataset that is the default
+specified in the script for the second (missing) parameter above.
+
 Run the Tesoro "channel" script, which runs the "channel" JavaScrip
 program using Node.js), on the Controller host.  This serves as the
 interface between the rover in the field (or the playback that pretends
