@@ -237,7 +237,7 @@ creating a moving map display. You can click on the pointer that is
 kept centered on the map and see a UTC timestamp for when the data was
 originally collected.
 
-# Dependencies
+# Details
 
 I used Ubuntu 20.04 rather than the Raspberry Pi OS (formerly known
 as Raspbian). (Prior to this project, I didn't even know you could run
@@ -265,6 +265,10 @@ system resides.
 <https://download.geofabrik.de>
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
+
+The '''fs''' directory in the Tesoro repo contains some snippets of
+configuration data that need to be added to configuration files in the
+Ubuntu file system.
 
 The install target in the Tesoro Makefile uses the Node.js terser program
 to minimize the client-side JavaScript code.
