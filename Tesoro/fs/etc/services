@@ -1,2 +1,2 @@
-tesoro		22020/tcp			# Tesoro sinks
-tesoro		22020/udp			# Tesoro sources
+tesoro		22020/tcp			# Tesoro source
+tesoro		22020/udp			# Tesoro sink
