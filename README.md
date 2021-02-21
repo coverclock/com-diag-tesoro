@@ -151,9 +151,10 @@ used by Hazer's gpstool, and transmitting it as datagrams in JSON form
 to the Controller.
 
 A typical Rover is a Raspberry Pi 3B+ running Raspbian. This is the
-actual mobile platform that I have used as my field unit in much of
-my Hazer work, although I have also used small palmtops and netbooks
-running Linux Mint or Ubuntu Mate with Intel Celeron and Atom processors.
+actual mobile platform that I have used as my field unit in much
+of my Hazer work, although I have also used small palmtops and
+netbooks, with Intel Celeron or Intel Atom processors, running
+Ubuntu Mate or Linux Mint.
 
 # Examples
 
