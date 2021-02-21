@@ -266,7 +266,7 @@ system resides.
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
 
-The '''fs''' directory in the Tesoro repo contains some snippets of
+The `fs` directory in the Tesoro repo contains some snippets of
 configuration data that need to be added to configuration files in the
 Ubuntu file system.
 
