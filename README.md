@@ -257,6 +257,11 @@ world map dataset is over a terabyte) this is a very lengthy process.
 
 <https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
 
+The `fs` directory in the Tesoro repo contains some snippets of
+configuration data that need to be added to configuration files in the
+Ubuntu file system, e.g. in the `/etc/services` file and in the
+`/etc/apache2/apache2.conf` configuration file.
+
 These web sites explain how to download map data, initially build the
 map database, and update it when necessary. I was careful to place the
 map data files and the Postgres database files on the ginormous SSD
@@ -266,10 +271,6 @@ system resides.
 <https://download.geofabrik.de>
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
-
-The `fs` directory in the Tesoro repo contains some snippets of
-configuration data that need to be added to configuration files in the
-Ubuntu file system.
 
 The install target in the Tesoro Makefile uses the Node.js terser program
 to minimize the client-side JavaScript code.
