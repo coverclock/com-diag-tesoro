@@ -551,7 +551,9 @@ sudo service apache2 reload
 sudo systemctl restart apache2
 sudo view /var/log/apache2/error.log
 
-wget -d -v -S -O - http://hostname:22020/location.json
+wget -d -v -S -O - http://tumbleweed:22020/location.json
+
+while wget -q -O location.json http://tumbleweed:22020/location.json; do cat location.json; sleep 1; done
 
 Rover Raspberry Pi 3B+ ARMv7 Raspbian 9.4 “stretch” Linux 4.14
 Model (Apache OSM Tile Server) Raspberry Pi 4B Ubuntu 20.04 "focal" Linux 5.4
