@@ -259,8 +259,18 @@ world map dataset is over a terabyte) this is a very lengthy process.
 
 The `fs` directory in the Tesoro repo contains some snippets of
 configuration data that need to be added to configuration files in the
-Ubuntu file system, e.g. in the `/etc/services` file and in the
-`/etc/apache2/apache2.conf` configuration file.
+Ubuntu file system, e.g. in the `/etc/apache2/apache2.conf` configuration
+file.
+
+You will need to define some services in the /etc/services file. The
+port numbers are your choices to make. Note that the TCP and UDP port
+numbers for the same service (e.g.  tesoro) can be (and typically are)
+the same number. Port number values may range from 0 to 65353 and must
+be unique. Linux also assigns "ephemeral" or temporary port numbers
+which will not appear in the /etc/services file.
+
+    tesoro     33333/tcp  # Tesoro JSON source
+    tesoro     33333/udp  # Tesoro JSON sink
 
 These web sites explain how to download map data, initially build the
 map database, and update it when necessary. I was careful to place the
