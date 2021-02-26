@@ -257,6 +257,21 @@ world map dataset is over a terabyte) this is a very lengthy process.
 
 <https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/>
 
+The `fs` directory in the Tesoro repo contains some snippets of
+configuration data that need to be added to configuration files in the
+Ubuntu file system, e.g. in the `/etc/apache2/apache2.conf` configuration
+file.
+
+You will need to define some services in the /etc/services file. The
+port numbers are your choices to make. Note that the TCP and UDP port
+numbers for the same service (e.g.  tesoro) can be (and typically are)
+the same number. Port number values may range from 0 to 65353 and must
+be unique. Linux also assigns "ephemeral" or temporary port numbers
+which will not appear in the /etc/services file.
+
+    tesoro     33333/tcp  # Tesoro JSON source
+    tesoro     33333/udp  # Tesoro JSON sink
+
 These web sites explain how to download map data, initially build the
 map database, and update it when necessary. I was careful to place the
 map data files and the Postgres database files on the ginormous SSD
@@ -266,10 +281,6 @@ system resides.
 <https://download.geofabrik.de>
 
 <https://switch2osm.github.io/serving-tiles/updating-as-people-edit/>
-
-The `fs` directory in the Tesoro repo contains some snippets of
-configuration data that need to be added to configuration files in the
-Ubuntu file system.
 
 The install target in the Tesoro Makefile uses the Node.js terser program
 to minimize the client-side JavaScript code.
