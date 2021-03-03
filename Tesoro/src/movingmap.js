@@ -30,7 +30,7 @@ let Tesoro_youarehere = null;
 
 let Tesoro_state = null;
 
-const TESORO_STALLED = 's';
+const TESORO_STALLED = 'S';
 
 let Tesoro_stall = 0;
 
@@ -48,8 +48,9 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
   const INITIALIZING = 'i';
   const HOSTING = 'h';
   const SEQUENCING = 'n';
-  const EPOCHING = 'e';
-  const WAITING = 'w';
+  const RETROGRADING = 'r';
+  const VERTICAL = 'v';
+  const STATIONARY = 's';
   const MISSING = 'x';
   const MOVING = 'm';
 
@@ -121,19 +122,19 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
 
   } else if (tim <= Tesoro_epoch) {
 
-    // Unexpected: the epoch TIMe has not advanced.
+    // Unexpected: the TIMe has not advanced.
 
-    if ((Tesoro_state != EPOCHING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
+    if ((Tesoro_state != RETROGRADING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       console.log('TIM ' + tim);
       Tesoro_report('Retrograding');
-      Tesoro_state = EPOCHING;
+      Tesoro_state = RETROGRADING;
     }
 
     Tesoro_stall = 0;
 
-  } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude)) {
+  } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude) && (msl != Tesoro_meansealevel)) {
 
-    // Unusual: the latitude and longitude has not changed.
+    // Unusual: only the altitude has changed.
 
     Tesoro_youarehere.setPopupContent(lbl);
 
@@ -142,9 +143,26 @@ function Tesoro_render(nam, num, tim, lat, lon, msl, lbl) {
     Tesoro_meansealevel = msl;
     Tesoro_label = lbl;
 
-    if ((Tesoro_state != WAITING) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
+    if ((Tesoro_state != VERTICAL) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
+      Tesoro_report('Vertical');
+      Tesoro_state = VERTICAL;
+    }
+
+    Tesoro_stall = 0;
+
+  } else if ((lat == Tesoro_latitude) && (lon == Tesoro_longitude) && (msl == Tesoro_meansealevel)) {
+
+    // Unusual: the position has not changed.
+
+    Tesoro_youarehere.setPopupContent(lbl);
+
+    Tesoro_sequence = num;
+    Tesoro_epoch = tim;
+    Tesoro_label = lbl;
+
+    if ((Tesoro_state != STATIONARY) || ((Tesoro_sequence % TESORO_MODULO) == 0)) {
       Tesoro_report('Stationary');
-      Tesoro_state = WAITING;
+      Tesoro_state = STATIONARY;
     }
 
     Tesoro_stall = 0;

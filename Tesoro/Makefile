@@ -7,7 +7,7 @@
 # "Digital Aggregates Corporation" is a registered trademark.
 
 PROJECT	:=	tesoro
-RELEASE	:=	0.0.1
+RELEASE	:=	0.1.0
 
 TMPDIR	:=	/tmp
 WWW		:=	/var/www/html/tesoro
