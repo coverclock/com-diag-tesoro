@@ -35,6 +35,12 @@
 ///
 
 //
+// CONSTANTS
+//
+
+const NL = 10;
+
+//
 // DEFAULTS
 //
 
@@ -53,10 +59,11 @@ const dns = require('dns');
 const fs = require('fs');
 
 //
-// CACHE
+// CACHES
 //
 
-let cache = new Map();
+let senders = new Map();
+let names = new Map();
 
 //
 // TCP HTTP PRODUCER
@@ -72,8 +79,8 @@ let producer = http.createServer((request, response) => {
     const suffix = relative.slice(relative.length - 5);
     if (suffix != '.json') { throw new Error('Suffix'); }
     const name = relative.slice(0, relative.length - 5);
-    if (!cache.has(name)) { throw new Error('Unknown'); }
-    const output = cache.get(name);
+    if (!names.has(name)) { throw new Error('Unknown'); }
+    const output = names.get(name);
     console.log('Responding ' + output);
     response.setHeader('Content-Type', 'application/json');
     response.setHeader('Access-Control-Allow-Origin', '*');
@@ -82,7 +89,7 @@ let producer = http.createServer((request, response) => {
     response.writeHead(200);
     response.end(output);
   } catch (iregrettoinformyou) {
-    console.log('Error ' + iregrettoinformyou);
+    console.log('Request ' + iregrettoinformyou);
     response.writeHead(404);
   }
 });
@@ -104,33 +111,44 @@ consumer.on('listening', () => {
 });
 
 consumer.on('message', (input, endpoint) => {
+  console.log('Sender ' + endpoint.address + ' ' + endpoint.port);
+  const sender = '[' + endpoint.address + ']:' + endpoint.port;
+  // Check for end of stream.
   const length = input.length;
-  console.log('Sender ' + endpoint.address + ' ' + endpoint.port + ' ' + length);
-  // Hazer tools like csv2dgm send a zero length datagram when they exit.
-  try {
-    if (length <= 0) { throw new Error('Datagram'); }
-    //if (input[length - 1] != '\n') { throw new Error('Newline'); }
-    console.log('Received ' + input.slice(0, length - 1));
-    // Validate.
-    let datagram = JSON.parse(input);
-    const nam = datagram.NAM.length;
-    if (nam <= 0) { throw new Error('NAM'); }
-    datagram.NUM = parseInt(datagram.NUM, 10);
-    datagram.TIM = parseInt(datagram.TIM, 10);
-    datagram.LAT = parseFloat(datagram.LAT);
-    datagram.LON = parseFloat(datagram.LON);
-    datagram.MSL = parseFloat(datagram.MSL);
-    const lbl = datagram.LBL.length;
-    if (lbl <= 0) { throw new Error('LBL'); }
-    // Normalize.
-    const output = JSON.stringify(datagram);
-    // Cache
-    if (!cache.has(datagram.NAM)) {
-      console.log('Starting ' + datagram.NAM);
+  if (length == 0) {
+    if (senders.has(sender)) {
+      const name = senders.get(sender);
+      if (names.has(name)) {
+        names.delete(name);
+      }
+      senders.delete(sender);
+      console.log('Stopping ' + sender + ' ' + name);
     }
-    cache.set(datagram.NAM, output);
-  } catch (iregrettoinformyou) {
-    console.log('Error ' + input + ' ' + iregrettoinformyou);
+  } else {
+    try {
+      if (input[length - 1] != NL) { throw new Error('Newline'); }
+      console.log('Received ' + input.slice(0, length - 1));
+      // Parse.
+      const datagram = JSON.parse(input);
+      // Validate.
+      if (datagram.NAM.length <= 0) { throw new Error('NAM'); }
+      datagram.NUM = parseInt(datagram.NUM, 10);
+      datagram.TIM = parseInt(datagram.TIM, 10);
+      datagram.LAT = parseFloat(datagram.LAT);
+      datagram.LON = parseFloat(datagram.LON);
+      datagram.MSL = parseFloat(datagram.MSL);
+      if (datagram.LBL.length <= 0) { throw new Error('LBL'); }
+      // Normalize.
+      const output = JSON.stringify(datagram);
+      // Cache
+      if (!senders.has(sender)) {
+        console.log('Starting ' + sender + ' ' + datagram.NAM);
+      }
+      senders.set(sender, datagram.NAM);
+      names.set(datagram.NAM, output);
+    } catch (iregrettoinformyou) {
+      console.log('Received ' + iregrettoinformyou);
+    }
   }
 });
 
@@ -138,7 +156,7 @@ consumer.on('message', (input, endpoint) => {
 // ACQUIRE COMMAND LINE ARGUMENTS
 //
 
-let vector = process.argv.slice(2);
+const vector = process.argv.slice(2);
 
 if (vector.length > 0) { incoming = vector[0]; outgoing = incoming; }
 if (vector.length > 1) { outgoing = vector[1]; }
