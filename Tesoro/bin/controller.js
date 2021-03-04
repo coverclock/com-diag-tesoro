@@ -142,9 +142,16 @@ consumer.on('message', (input, endpoint) => {
       const output = JSON.stringify(datagram);
       // Cache
       if (!senders.has(sender)) {
+        senders.set(sender, datagram.NAM);
         console.log('Starting ' + sender + ' ' + datagram.NAM);
-      }
-      senders.set(sender, datagram.NAM);
+      } else {
+        const name = senders.get(sender);
+        if (datagram.NAM != name) {
+          names.delete(name);
+          senders.set(sender, datagram.NAM);
+          console.log('Changing ' + sender + ' ' + datagram.NAM);
+        }
+      } 
       names.set(datagram.NAM, output);
     } catch (iregrettoinformyou) {
       console.log('Received ' + iregrettoinformyou);
