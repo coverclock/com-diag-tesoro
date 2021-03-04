@@ -262,7 +262,7 @@ creating a moving map display. You can click on the pointer that is
 kept centered on the map and see a UTC timestamp for when the data was
 originally collected.
 
-# Update (2021-03-04)
+# controller.js (2021-03-04)
 
 The server-side channel.js program on handles a single geolocating
 source. The new server-side controller.js has the same command line
@@ -274,13 +274,24 @@ caches. If an HTTP request is made for a geolocating source not in
 the cache, a 404 error code is returned. Requests from the controller
 but have the following form.
 
-    http://HOST:PORT/CHANNEL.json
+    http://HOST:PORT/NAM.json
 
 This is an example of what you might enter into the Select Channel dialog
 when using the selectchannel.html page if the controller.js program is
 serving port 12345 on host "controller", and the Rover is named "tracker".
 
     http://controller:12345/tracker.json
+
+One of my Raspberry Pis that runs 24x7 serves as both an RTK router
+for my DGNSS project ("Tumbleweed") and as a multi-channel controller
+for this project ("Tesoro"). The /etc/rc.local file on this RPi, an
+old-school script that gets run by the new-school systemd every time the
+system boots, includes these two lines to start the RTK router (rtktool)
+and the controller,
+
+    runuser -l pi -c 'cd /home/pi/src/com-diag-hazer/Hazer; out/host/bin/router &'
+
+    runuser -l pi -c 'cd /home/pi/src/com-diag-tesoro/Tesoro; fun/controller &'
 
 # Details
 
