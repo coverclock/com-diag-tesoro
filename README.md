@@ -97,6 +97,30 @@ and Safari on a x86_64 Macintosh running MacOS Catalina.
 * MSL - the altitude above mean sea level in decimal meters.
 * LBL - a label string (typically a timestamp) applied to the moving marker.
 
+# Client Side Collateral
+
+* src/base.html - generates map of DGNSS Base Station.
+* src/base.json - JSON datagram for DGNSS Base Station.
+* src/choosefile.html - renders moving map based on observation files via menu.
+* src/draganddrop.html - reenders moving map based on observation files via d&d.
+* src/movingmap.js - generates moving map display.
+* src/query.html - renders static map based on query paramters.
+* src/selectchannel.html - renders moving map based on specified channel.
+
+# Server Side Collateral
+
+* bin/base.js - fixed channel for DGNSS Base Station location.
+* bin/channel.js - single dynamic channel.
+* bin/controller.js - multiple dynamic channels.
+* bin/helloworld.js - hello world test server.
+
+# Functional Tests
+
+* fun/channel - calls channel.sh.
+* fun/channel.sh - runs channel.js with node.js.
+* fun/controller - calls controller.sh.
+* fun/controller.sh - runs controller.js with node.js.
+
 # Architecture
 
 Tesoro follows the Model-View-Controller (MVC) pattern. Although all of the
