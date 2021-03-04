@@ -262,6 +262,26 @@ creating a moving map display. You can click on the pointer that is
 kept centered on the map and see a UTC timestamp for when the data was
 originally collected.
 
+# Update (2021-03-04)
+
+The server-side channel.js program on handles a single geolocating
+source. The new server-side controller.js has the same command line
+arguments as the old script, but handles multiple geolocating sources,
+identifying them by the NAM field in the datagram CSV. Datagrams from
+multiple sources can be cached and served concurrently. If the program
+receives no updates after (currently) one minute, it clears all of the
+caches. If an HTTP request is made for a geolocating source not in
+the cache, a 404 error code is returned. Requests from the controller
+but have the following form.
+
+    http://HOST:PORT/CHANNEL.json
+
+This is an example of what you might enter into the Select Channel dialog
+when using the selectchannel.html page if the controller.js program is
+serving port 12345 on host "controller", and the Rover is named "tracker".
+
+    http://controller:12345/tracker.json
+
 # Details
 
 I used Ubuntu 20.04 rather than the Raspberry Pi OS (formerly known
