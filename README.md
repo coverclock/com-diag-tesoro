@@ -389,9 +389,11 @@ repositories for more information on how to do that.
 
 # Articles
 
+<https://coverclock.blogspot.com/2021/02/a-moving-map-display-using.html>
+
 <https://coverclock.blogspot.com/2021/02/the-openstreetmap-moving-map-in-real.html>
 
-<https://coverclock.blogspot.com/2021/02/a-moving-map-display-using.html>
+<https://coverclock.blogspot.com/2021/03/the-openstreetmap-moving-map-on-mobile.html>
 
 # Images
 
