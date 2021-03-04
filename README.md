@@ -111,7 +111,7 @@ and Safari on a x86_64 Macintosh running MacOS Catalina.
 
 * bin/base.js - fixed channel for DGNSS Base Station location.
 * bin/channel.js - single dynamic channel.
-* bin/controller.js - multiple dynamic channels.
+* bin/controller.js - multiple dynamic channels indexed by host, port, and name.
 * bin/helloworld.js - hello world test server.
 
 # Functional Tests
