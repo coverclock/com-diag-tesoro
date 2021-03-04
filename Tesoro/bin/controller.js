@@ -23,31 +23,12 @@
 ///
 /// DEFAULT
 ///
-/// node controller.js [ tesoro [ tesoro ] ]
-///
-/// EXAMPLES
-///
-/// node controller.js [ 22020 [ 22020 ] ]
+/// node controller.js tesoro tesoro
 ///
 /// TEST
 ///
-/// while true; do wget -d -v -S -O - http://HOSTNAME:22020/NAM.json 2> /dev/null; echo; sleep 1;  done
+/// while true; do wget -d -v -S -O - http://HOSTNAME:PORT/NAM.json 2> /dev/null; echo; sleep 1;  done
 ///
-
-//
-// CONSTANTS
-//
-
-const NL = 10;
-
-//
-// DEFAULTS
-//
-
-let incoming = 'tesoro';
-let outgoing = 'tesoro';
-let sink = 22020;
-let source = 22020;
 
 //
 // PREREQUISITES
@@ -59,11 +40,73 @@ const dns = require('dns');
 const fs = require('fs');
 
 //
-// CACHES
+// CONSTANTS
+//
+
+const NL = 10;
+const MS = 60000;
+
+//
+// DEFAULTS
+//
+
+let incoming = 'tesoro';
+let outgoing = 'tesoro';
+let sink = 0;
+let source = 0;
+
+//
+// CACHING
 //
 
 let senders = new Map();
 let names = new Map();
+let timer = null;
+
+function clear() {
+  console.log('Clearing');
+  if (timer != null) {
+    clearTimeout(timer);
+    timer = null;
+  }
+  senders = new Map();
+  names = new Map();
+}
+
+function update(sender, name, output) {
+  if (!senders.has(sender)) {
+    console.log('Starting ' + sender + ' ' + name);
+    senders.set(sender, name);
+  } else {
+    const prior = senders.get(sender);
+    if (name == prior) {
+      // Do nothing.
+    } else if (!names.has(prior)) {
+      console.log('Initializing ' + sender + ' ' + name);
+      senders.set(sender, name);
+    } else {
+      console.log('Updating ' + sender + ' ' + name);
+      names.delete(prior);
+      senders.set(sender, name);
+    }
+  } 
+  names.set(name, output);
+  if (timer != null) {
+    clearTimeout(timer);
+  }
+  timer = setTimeout(clear, MS);
+}
+
+function remove(sender) {
+  if (senders.has(sender)) {
+    const prior = senders.get(sender);
+    if (names.has(prior)) {
+      names.delete(prior);
+    }
+    senders.delete(sender);
+    console.log('Stopping ' + sender + ' ' + prior);
+  }
+}
 
 //
 // TCP HTTP PRODUCER
@@ -89,8 +132,9 @@ let producer = http.createServer((request, response) => {
     response.writeHead(200);
     response.end(output);
   } catch (iregrettoinformyou) {
-    console.log('Request ' + iregrettoinformyou);
+    console.log('Error ' + iregrettoinformyou);
     response.writeHead(404);
+    response.end('');
   }
 });
 
@@ -116,14 +160,7 @@ consumer.on('message', (input, endpoint) => {
   // Check for end of stream.
   const length = input.length;
   if (length == 0) {
-    if (senders.has(sender)) {
-      const name = senders.get(sender);
-      if (names.has(name)) {
-        names.delete(name);
-      }
-      senders.delete(sender);
-      console.log('Stopping ' + sender + ' ' + name);
-    }
+    remove(sender);
   } else {
     try {
       if (input[length - 1] != NL) { throw new Error('Newline'); }
@@ -140,21 +177,10 @@ consumer.on('message', (input, endpoint) => {
       if (datagram.LBL.length <= 0) { throw new Error('LBL'); }
       // Normalize.
       const output = JSON.stringify(datagram);
-      // Cache
-      if (!senders.has(sender)) {
-        senders.set(sender, datagram.NAM);
-        console.log('Starting ' + sender + ' ' + datagram.NAM);
-      } else {
-        const name = senders.get(sender);
-        if (datagram.NAM != name) {
-          names.delete(name);
-          senders.set(sender, datagram.NAM);
-          console.log('Changing ' + sender + ' ' + datagram.NAM);
-        }
-      } 
-      names.set(datagram.NAM, output);
+      // Cache.
+      update(sender, datagram.NAM, output);
     } catch (iregrettoinformyou) {
-      console.log('Received ' + iregrettoinformyou);
+      console.log('Error ' + iregrettoinformyou);
     }
   }
 });

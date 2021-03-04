@@ -19,15 +19,11 @@
 ///
 /// DEFAULT
 ///
-/// node channel.js [ tesoro [ tesoro ] ]
-///
-/// EXAMPLES
-///
-/// node channel.js [ 22020 [ 22020 ] ]
+/// node channel.js tesoro tesoro
 ///
 /// TEST
 ///
-/// while true; do wget -d -v -S -O - http://HOSTNAME:22020/channel.json 2> /dev/null; echo; sleep 1;  done
+/// while true; do wget -d -v -S -O - http://HOSTNAME:PORT/channel.json 2> /dev/null; echo; sleep 1;  done
 ///
 
 //
@@ -36,8 +32,8 @@
 
 let incoming = 'tesoro';
 let outgoing = 'tesoro';
-let sink = 22020;
-let source = 22020;
+let sink = 0;
+let source = 0;
 
 //
 // PREREQUISITES
