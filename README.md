@@ -70,14 +70,26 @@ and Yodel (integrated GNSS and IMU).
 Hazer is built on top of another of my projects, Diminuto, a C-based
 systems programming library.
 
-Most of my Hazer work has been hosted on Raspberry Pis running Raspbian,
-both for the mobile rover units that collect the GNSS and IMU data in
-the field, and for a fixed base stations that transmits differential
-corrections. My OSM tile server is also hosted on a Raspberry Pi, running
-Ubuntu Linux, with a two terabyte (2TB) Solid State Disk (SSD) in additon
-to its root 128GB SD card. The visualization portion of Tesoro has been
-tested with FireFox on a x86_64 Ubuntu system, and with FireFox, Chrome,
-and Safari on a x86_64 Macintosh running MacOS Catalina.
+# Platforms
+
+My Hazer GNSS work has been hosted on Raspberry Pis running Raspbian
+(including a pi-top \[3\] laptop), on an Intel Celeron palmtop running
+Ubuntu MATE, or on an ancient Intel i686 netbook running Linux Mint.
+See the Hazer repo's README for a long list of GPS, GNSS, and IMU
+devices used with Hazer.
+
+My OSM tile server is hosted on a Raspberry Pi, running Ubuntu Linux,
+with a two terabyte (2TB) Solid State Disk (SSD) in additon to its
+boot/root SD card.
+
+The visualization portion of Tesoro has been tested with FireFox and
+Chrome on a x86_64 Ubuntu system; with FireFox, Chrome, and Safari on
+a x86_64 Macintosh running MacOS; on Safari on an iPad and an iPhone 7
+running iOS, and on Chrome on a Google Pixel 4 running Android 11.
+
+The server-side JavaScript portion of Tesoro has been run on any
+platform I had handy that runs a recent version Node.js. Currently
+it's running 24x7 on another Raspberry Pi.
 
 # Directories
 
@@ -128,9 +140,12 @@ components could run on the same computer, I typically run them on three
 different computers to simulate how I imagine this might be used in an
 actual application.
 
-Here is a diagram of the architecture as desc4ribed below.
+Here are diagrams of two minor variations of the architecture as described
+below.
 
 <https://flic.kr/p/2kCThPi>
+
+<https://flic.kr/p/2kFopLb>
 
 ## Model
 
@@ -262,7 +277,7 @@ creating a moving map display. You can click on the pointer that is
 kept centered on the map and see a UTC timestamp for when the data was
 originally collected.
 
-# controller.js (2021-03-04)
+## Update (2021-03-04)
 
 The server-side channel.js program on handles a single geolocating
 source. The new server-side controller.js has the same command line
@@ -402,6 +417,8 @@ repositories for more information on how to do that.
 # Videos
 
 <https://youtu.be/GjR7fPQRCZc>
+
+<https://youtu.be/-6p3w1SxW1A>
 
 # Resources
 
