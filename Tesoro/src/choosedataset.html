@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<!-- Copyright 2021 by the Digital Aggregates Corporation, Arvada Colorado USA -->
+<!-- Licensed under the terms in LICENSE.txt -->
+<!-- https://github.com/coverclock/com-diag-tesoro -->
+<!-- mailto: mailto:coverclock@diag.com -->
+<!-- Generates a static map using a chosen dataset. -->
+<!-- e.g. http://tesoro/tesoro/choosedataset.html -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="leaflet/v1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="leaflet/v1.7.1/leaflet.css"></link>
+    <style>
+      html, body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <input id="choosedataset" type="file"></input>
+    <div id="map"></div>
+    <script src="./routemap.js"></script>
+    <script>
+
+      /// @function Tesoro_chooser
+      /// Fires on choosing of an observation file by the user.
+      /// @param {sothishappened} is the event for the file choosing.
+      function Tesoro_chooser(sothishappened) {
+        let list = sothishappened.target.files;
+        let dataset = list[0];
+        Tesoro_dataset(dataset);
+      }
+
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        let choosedataset = document.getElementById('choosedataset');
+        choosedataset.addEventListener('change', Tesoro_chooser, false);
+      } else {
+        console.log('HTML5 file APIs not supported on this platform.');
+      }
+
+    </script>
+  </body>
+</html>

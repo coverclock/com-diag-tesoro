@@ -7,7 +7,7 @@
 # "Digital Aggregates Corporation" is a registered trademark.
 
 PROJECT	:=	tesoro
-RELEASE	:=	0.3.0
+RELEASE	:=	0.4.0
 
 TMPDIR	:=	/tmp
 WWW		:=	/var/www/html/tesoro
@@ -16,7 +16,7 @@ SOURCE	:=	src
 VERSION	:=	v1.7.1
 BASE	:=	${WWW}/leaflet/${VERSION}
 OWNER	:=	${USER}
-FILES	:=	${WWW}/base.html ${WWW}/query.html ${WWW}/draganddrop.html ${WWW}/choosefile.html ${WWW}/selectchannel.html ${WWW}/movingmap.js ${WWW}/base.json ${WWW}/release.html
+FILES	:=	${WWW}/base.html ${WWW}/query.html ${WWW}/draganddrop.html ${WWW}/choosefile.html ${WWW}/selectchannel.html ${WWW}/movingmap.js ${WWW}/choosedataset.html ${WWW}/routemap.js ${WWW}/base.json ${WWW}/release.html
 LEAFLET	:=	${BASE}/leaflet.js
 ARCHIVE	:=	leaflet.zip
 LINK	:=	http://cdn.leafletjs.com/leaflet/${VERSION}/${ARCHIVE}
@@ -78,6 +78,15 @@ ${WWW}/base.json:	${SOURCE}/base.json ${BASE}
 	cp $< $@ && chmod ${MODE} $@
 
 ${WWW}/movingmap.js:	${SOURCE}/movingmap.js ${BASE}
+	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"` && \
+	terser < $< > $$T && \
+	mv $$T $@ && \
+	chmod ${MODE} $@
+
+${WWW}/choosedataset.html:	${SOURCE}/choosedataset.html ${BASE}
+	cp $< $@ && chmod ${MODE} $@
+
+${WWW}/routemap.js:	${SOURCE}/routemap.js ${BASE}
 	T=`mktemp "${TMPDIR}/${PROJECT}.XXXXXXXXXX"` && \
 	terser < $< > $$T && \
 	mv $$T $@ && \
