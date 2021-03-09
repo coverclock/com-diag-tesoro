@@ -1,7 +1,7 @@
 com-diag-tesoro
 ==============
 
-Using OpenStreetMap (OSM) to create a moving map display.
+Client And Server Side JavaScript Using OpenStreetMap (OSM) To Render Maps.
 
 # Copyright
 
