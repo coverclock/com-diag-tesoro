@@ -473,6 +473,8 @@ repositories for more information on how to do that.
 
 <https://coverclock.blogspot.com/2021/03/the-openstreetmap-moving-map-on-mobile.html>
 
+<https://coverclock.blogspot.com/2021/03/a-static-route-map-display-using.html>
+
 # Images
 
 <https://flic.kr/s/aHsmTB3tme>
