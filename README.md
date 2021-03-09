@@ -206,7 +206,7 @@ The Hazer gpstool utility stores data in a Comma Separated Value (CSV)
 format that can be easily imported into a spreadsheet or converted into
 other forms. A single line of a Hazer CSV dataset looks like this.
 
-    "neon", 1299, 4, 0, 10, 1600356403.090779879, 1600356402.000000000, 39.7328371, -105.1543085, 0., 1766.500, 1745.000, 0., 4.948000, 127.340000000, -1.10049, 0.40705, 127.34082, 0.52130, 0.46396, 1.12472, 0, 0\\n
+    "neon", 1299, 4, 0, 10, 1600356403.090779879, 1600356402.000000000, 39.7328371, -105.1543085, 0., 1766.500, 1745.000, 0., 4.948000, 127.340000000, -1.10049, 0.40705, 127.34082, 0.52130, 0.46396, 1.12472, 0, 0\n
 
 The Hazer csv2dgm utility can convert a Hazer CSV dataset into the JSON
 form required by the movingmap.js script and transmit each line of as
@@ -217,7 +217,7 @@ format is used by the channel.js and controller.js server-side programs,
 and the selectchannel.html and movingmap.js client-side programs. The
 JSON datagram looks like this.
 
-    { "NAM": "neon", "NUM": 1300, "TIM": 1600356403, "LAT": 39.7328281, "LON": -105.1542851, "MSL": 1766.500, "LBL": "2020-09-17T15:26:43Z" }\\n
+    { "NAM": "neon", "NUM": 1300, "TIM": 1600356403, "LAT": 39.7328281, "LON": -105.1542851, "MSL": 1766.500, "LBL": "2020-09-17T15:26:43Z" }\n
 
 
 The Hazer csvdataset script can convert a Hazer CSV dataset into the
