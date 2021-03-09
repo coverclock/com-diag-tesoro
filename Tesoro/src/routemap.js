@@ -20,7 +20,11 @@ function Tesoro_manifest(route) {
 
   let line = L.polyline(route, { color: 'red' }).addTo(map);
 
-  map.fitBounds(line.getBounds());
+  let bounds = line.getBounds();
+
+  console.log('Bounds [ ' + bounds.getNorth() + ', ' + bounds.getWest() + ' ] [ ' + bounds.getSouth() + ', ' + bounds.getEast() + ' ]');
+
+  map.fitBounds(bounds);
 }
 
 /// @function_consume
@@ -38,6 +42,8 @@ function Tesoro_consume(path) {
     console.log('Error ' + path + ' ' + iregrettoinformyou);
     return;
   }
+
+  console.log('Waypoints ' + route.length);
 
   Tesoro_manifest(route);
 }
