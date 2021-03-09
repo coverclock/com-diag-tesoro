@@ -36,9 +36,9 @@ a web developer. JavaScript will not be appearing on my resume.
 # Abstract
 
 Tesoro is an application of OpenStreetMap (OSM), an open-source
-alternative to Google Maps. Its purpose is to integrate my own
-geolocation software with OSM for the purposes of visualizing geolocation
-data streams either in real-time, or as collected and played back. Tesoro
+alternative to Google Maps. Its purpose is to integrate my own geolocation
+software with OSM for the purposes of visualizing geolocation data
+streams either in real-time, or as collected and played back. Tesoro
 includes both client-side and server-side JavaScript code (see disclaimer
 above). The client-side code uses the Leaflet 1.7.1 JavaScript library
 (see link below) and an OSM tile (map segment) server. The tile server
@@ -111,13 +111,18 @@ it's running 24x7 on another Raspberry Pi.
 
 # Client Side Collateral
 
+* src/choosedataset.html - renders static map based on a dataset via menu.
+* src/movingmap.js - generates moving map display.
+* src/routemap.js - generates a static route map display.
+* src/selectchannel.html - renders moving map based on specified channel.
+
+# CLient Side Collateral (mostly used for testing)
+
 * src/base.html - generates map of DGNSS Base Station.
 * src/base.json - JSON datagram for DGNSS Base Station.
 * src/choosefile.html - renders moving map based on observation files via menu.
 * src/draganddrop.html - reenders moving map based on observation files via d&d.
-* src/movingmap.js - generates moving map display.
 * src/query.html - renders static map based on query paramters.
-* src/selectchannel.html - renders moving map based on specified channel.
 
 # Server Side Collateral
 
@@ -169,13 +174,13 @@ and Firefox and Safari on a Mac running MacOS.
 
 ## Controller
 
-The Controller is the source of the geolocation data and hence steers
-the visualization. It is implemented as Tesoro's "channel" JavaScript
-program that runs under Node.js. The channel program receives geolocation
-data as datagrams in JavaScript Object Notation (JSON) form over User
-Datagram Protocol (UDP). It stands up a trivial web server that responds
-to any HyperText Transfer Protocol (HTTP) request with the latest JSON
-datagram that it has received over the Transmission Control Protocol
+The Controller is the source of the geolocation data and hence steers the
+visualization. It is implemented as Tesoro's "channel" JavaScript program
+that runs under Node.js. The channel program receives geolocation data as
+datagrams in JavaScript Object Notation (JSON) form over User Datagram
+Protocol (UDP). The channel script stands up a trivial web server that
+responds to any HyperText Transfer Protocol (HTTP) request with the latest
+JSON datagram that it has received over the Transmission Control Protocol
 (TCP) return path.
 
 A typical Controller is one of my x86_64 development systems running
@@ -194,6 +199,40 @@ actual mobile platform that I have used as my field unit in much
 of my Hazer work, although I have also used small palmtops and
 netbooks, with Intel Celeron or Intel Atom processors, running
 Ubuntu Mate or Linux Mint.
+
+# Data Formats
+
+The Hazer gpstool utility stores data in a Comma Separated Value (CSV)
+format that can be easily imported into a spreadsheet or converted into
+other forms. A single line of a Hazer CSV dataset looks like this.
+
+    "neon", 1299, 4, 0, 10, 1600356403.090779879, 1600356402.000000000, 39.7328371, -105.1543085, 0., 1766.500, 1745.000, 0., 4.948000, 127.340000000, -1.10049, 0.40705, 127.34082, 0.52130, 0.46396, 1.12472, 0, 0\n
+
+The Hazer csv2dgm utility can convert a Hazer CSV dataset into the JSON
+form required by the movingmap.js script and transmit each line of as
+a datagram to a Tesoro channel. The utility is invoked by the Hazer
+csvplayback script (for playback of a stored CSV dataset) and the Hazer
+csvfollow script (for forwarding datagrams in real-time). This datagram
+format is used by the channel.js and controller.js server-side programs,
+and the selectchannel.html and movingmap.js client-side programs. The
+JSON datagram looks like this.
+
+    { "NAM": "neon", "NUM": 1300, "TIM": 1600356403, "LAT": 39.7328281, "LON": -105.1542851, "MSL": 1766.500, "LBL": "2020-09-17T15:26:43Z" }
+
+The Hazer csvdataset script can convert a Hazer CSV dataset into the
+JSON array form of latitude and longitude coordinates required by the
+routemap.js script. Unlike the datagrams, which are consumed one at a
+time, the entire CSV dataset is converted into a single (sometimes quite
+large) JSON array and imported into memory. This places a limit on how
+many datapoints can be imported. The csvdataset takes an optional modulo
+parameter (default "1") to set the sampling rate. Regardless of the
+sampling rate, the first and last data points are included. The Hazer
+CSV dataset is filtered to remove duplicate entries where successive
+geolocation coordinates do not change. This dataset format is used by
+the choosedataset.html and routemap.js client-side programs. The JSON
+array looks like this.
+
+    { "PATH": [ [ 39.7762445, -105.1621035 ], [ 39.7762428, -105.1622863 ], [ 39.7762416, -105.1624700 ], [ 39.7762408, -105.1626533 ], [ 39.7762401, -105.1628366 ], [ 39.7762396, -105.1630200 ] ] }
 
 # Examples
 
@@ -277,7 +316,7 @@ creating a moving map display. You can click on the pointer that is
 kept centered on the map and see a UTC timestamp for when the data was
 originally collected.
 
-## Update (2021-03-04)
+### Update (2021-03-04)
 
 The server-side channel.js program on handles a single geolocating
 source. The new server-side controller.js has the same command line
@@ -297,6 +336,9 @@ serving port 12345 on host "controller", and the Rover is named "tracker".
 
     http://controller:12345/tracker.json
 
+This works with the same selectchannel.html web page and its client-side
+movingmap.js program  as described above.
+
 One of my Raspberry Pis that runs 24x7 serves as both an RTK router
 for my DGNSS project ("Tumbleweed") and as a multi-channel controller
 for this project ("Tesoro"). The /etc/rc.local file on this RPi, an
@@ -307,6 +349,18 @@ and the controller,
     runuser -l pi -c 'cd /home/pi/src/com-diag-hazer/Hazer; out/host/bin/router &'
 
     runuser -l pi -c 'cd /home/pi/src/com-diag-tesoro/Tesoro; fun/controller &'
+
+## Choose Dataset
+
+The choosedataset.html web page and its routemap.js script generates
+a static route map based on a route specified by a file containing an
+array of latitude and longitude coordinates in a JSON array format.
+The dataset to be rendered is chosen by a pop-up menu. The URL for this
+feature will look like this.
+
+    http://modelhost/tesoro/choosedataset.html
+
+This feature does not require a controller.
 
 # Details
 
