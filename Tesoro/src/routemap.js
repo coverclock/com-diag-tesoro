@@ -4,27 +4,51 @@
 /// <https://github.com/coverclock/com-diag-tesoro>
 /// <mailto: mailto:coverclock@diag.com>
 /// Renders a static map display from a dataset of JSON coordinates.
+/// Reference: https://stackoverflow.com/questions/8648892/how-to-convert-url-parameters-to-a-javascript-object
+
+let Tesoro_map = null;
 
 /// @function Tesoro_manifest
 /// Initialize a new map and draw the route on it.
 /// @param {route} is an array of arrays of latitude and longitude pairs.
 function Tesoro_manifest(route) {
 
+  // Construct the tile server based on our own.
+
   const url = new URL(document.URL);
   let tileserver = url.origin + '/hot/{z}/{x}/{y}.png';
   console.log('Initializing ' + tileserver);
 
-  let map = L.map('map', { zoom: 18 });
-  L.tileLayer(tileserver, { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(map);
-  L.control.scale().addTo(map);
+  // Extract the options (if any) from the query string.
 
-  let line = L.polyline(route, { color: 'red' }).addTo(map);
+  let options = { };
+  const query = location.search;
+  if (query != '') {
+    let parameters = query.substring(1);
+    options = JSON.parse('{"' + parameters.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key === "" ? value:decodeURIComponent(value) } );
+  }
+  if (options.color == null) {
+    options.color = 'red';
+  }
+  console.log('Options ' + JSON.stringify(options));
+
+  // Initialize the map.
+
+  if (Tesoro_map == null) {
+    Tesoro_map = L.map('map', { zoom: 18 });
+    L.tileLayer(tileserver, { maxZoom: 19, attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>' }).addTo(Tesoro_map);
+    L.control.scale().addTo(Tesoro_map);
+  }
+
+  // Construct the path.
+
+  let line = L.polyline(route, options).addTo(Tesoro_map);
+
+  // Get the bounds of the path and fit the map to it.
 
   let bounds = line.getBounds();
-
   console.log('Bounds [ ' + bounds.getNorth() + ', ' + bounds.getWest() + ' ] [ ' + bounds.getSouth() + ', ' + bounds.getEast() + ' ]');
-
-  map.fitBounds(bounds);
+  Tesoro_map.fitBounds(bounds);
 }
 
 /// @function_consume
