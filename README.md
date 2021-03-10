@@ -369,10 +369,37 @@ feature will look like this.
 
     http://modelhost/tesoro/choosedataset.html
 
+The format of the dataset looks like this, with the JSON array of
+coordinates specified in the PATH property. (The formatting is what
+is produced by the Hazer csvdataset script.)
+
+    {
+      "PATH": [
+          [ 39.7943158, -105.1533988 ]
+        , [ 39.7943148, -105.1533981 ]
+        , [ 39.7943140, -105.1533973 ]
+        , [ 39.7943136, -105.1533960 ]
+      ]
+    }
+
 Leaflet polyline options like the color of the line or its weight can
 be specified as query paramters in the URL.
 
     http://tesoro/tesoro/choosedataset.html?color=blue&weight=6
+
+Default polyline options (including those in the URL) can be overridden
+by specifying them as additional properties in the JSON file.
+
+    {
+      "color": "blue",
+      "weight": 6.0,
+      "PATH": [
+          [ 39.7943158, -105.1533988 ]
+        , [ 39.7943148, -105.1533981 ]
+        , [ 39.7943140, -105.1533973 ]
+        , [ 39.7943136, -105.1533960 ]
+      ]
+    }
 
 This feature does not require a controller.
 

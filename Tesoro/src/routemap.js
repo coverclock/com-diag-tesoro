@@ -11,7 +11,7 @@ let Tesoro_map = null;
 /// @function Tesoro_manifest
 /// Initialize a new map and draw the route on it.
 /// @param {route} is an array of arrays of latitude and longitude pairs.
-function Tesoro_manifest(route) {
+function Tesoro_manifest(route, overrides) {
 
   // Construct the tile server based on our own.
 
@@ -30,6 +30,8 @@ function Tesoro_manifest(route) {
   if (options.color == null) {
     options.color = 'red';
   }
+  console.log('Defaults ' + JSON.stringify(options));
+  Object.assign(options, overrides);
   console.log('Options ' + JSON.stringify(options));
 
   // Initialize the map.
@@ -57,19 +59,23 @@ function Tesoro_manifest(route) {
 function Tesoro_consume(path) {
 
   let route = null;
+  let overrides = null;
 
   // Extract the field from the JSON path.
 
   try {
     route = path.PATH;
+    delete path.PATH;
+    overrides = path;
   } catch(iregrettoinformyou) {
     console.log('Error ' + path + ' ' + iregrettoinformyou);
     return;
   }
 
   console.log('Waypoints ' + route.length);
+  console.log('Overrides ' + JSON.stringify(overrides));
 
-  Tesoro_manifest(route);
+  Tesoro_manifest(route, overrides);
 }
 
 /// @function Tesoro_import
