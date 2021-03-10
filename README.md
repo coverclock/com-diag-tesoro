@@ -401,6 +401,9 @@ by specifying them as additional properties in the JSON file.
       ]
     }
 
+Multiple routes can be rendered on the same map just by re-choosing
+another dataset on an existing map.
+
 This feature does not require a controller.
 
 # Details
