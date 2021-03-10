@@ -11,28 +11,29 @@ let Tesoro_map = null;
 /// @function Tesoro_manifest
 /// Initialize a new map and draw the route on it.
 /// @param {route} is an array of arrays of latitude and longitude pairs.
-function Tesoro_manifest(route, overrides) {
+function Tesoro_manifest(route, specific) {
 
-  // Construct the tile server based on our own.
+  // Construct the tile server URL based on our own.
 
   const url = new URL(document.URL);
   let tileserver = url.origin + '/hot/{z}/{x}/{y}.png';
   console.log('Initializing ' + tileserver);
 
-  // Extract the options (if any) from the query string.
+  // Extract the default options (if any) from the query string.
 
-  let options = { };
+  let options = { color: 'red', weight: 3 };
+  console.log('Defaults ' + JSON.stringify(options));
+
   const query = location.search;
   if (query != '') {
     let parameters = query.substring(1);
-    options = JSON.parse('{"' + parameters.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key === "" ? value:decodeURIComponent(value) } );
+    let general = JSON.parse('{"' + parameters.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key === "" ? value:decodeURIComponent(value) } );
+    Object.assign(options, general);
+    console.log('General ' + JSON.stringify(options));
   }
-  if (options.color == null) {
-    options.color = 'red';
-  }
-  console.log('Defaults ' + JSON.stringify(options));
-  Object.assign(options, overrides);
-  console.log('Options ' + JSON.stringify(options));
+
+  Object.assign(options, specific);
+  console.log('Specific ' + JSON.stringify(options));
 
   // Initialize the map.
 
@@ -59,23 +60,22 @@ function Tesoro_manifest(route, overrides) {
 function Tesoro_consume(path) {
 
   let route = null;
-  let overrides = null;
+  let specific = null;
 
   // Extract the field from the JSON path.
 
   try {
     route = path.PATH;
     delete path.PATH;
-    overrides = path;
+    specific = path;
   } catch(iregrettoinformyou) {
     console.log('Error ' + path + ' ' + iregrettoinformyou);
     return;
   }
 
   console.log('Waypoints ' + route.length);
-  console.log('Overrides ' + JSON.stringify(overrides));
 
-  Tesoro_manifest(route, overrides);
+  Tesoro_manifest(route, specific);
 }
 
 /// @function Tesoro_import

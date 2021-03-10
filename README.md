@@ -385,7 +385,7 @@ is produced by the Hazer csvdataset script.)
 Leaflet polyline options like the color of the line or its weight can
 be specified as query paramters in the URL.
 
-    http://tesoro/tesoro/choosedataset.html?color=blue&weight=6
+    http://tesoro/tesoro/choosedataset.html?color=yellow&weight=3
 
 Default polyline options (including those in the URL) can be overridden
 by specifying them as additional properties in the JSON file.
@@ -509,6 +509,8 @@ repositories for more information on how to do that.
 <https://coverclock.blogspot.com/2021/03/the-openstreetmap-moving-map-on-mobile.html>
 
 <https://coverclock.blogspot.com/2021/03/a-static-route-map-display-using.html>
+
+<https://coverclock.blogspot.com/2021/03/advanced-static-route-maps-with.html>
 
 # Images
 
