@@ -11,6 +11,7 @@ let Tesoro_map = null;
 /// @function Tesoro_manifest
 /// Initialize a new map and draw the route on it.
 /// @param {route} is an array of arrays of latitude and longitude pairs.
+/// @param {specific} is an object which may contain polyline options.
 function Tesoro_manifest(route, specific) {
 
   // Construct the tile server URL based on our own.
