@@ -369,6 +369,11 @@ feature will look like this.
 
     http://modelhost/tesoro/choosedataset.html
 
+Leaflet polyline options like the color of the line or its weight can
+be specified as query paramters in the URL.
+
+    http://tesoro/tesoro/choosedataset.html?color=blue&weight=6
+
 This feature does not require a controller.
 
 # Details
