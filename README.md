@@ -116,7 +116,7 @@ it's running 24x7 on another Raspberry Pi.
 * src/routemap.js - generates a static route map display.
 * src/selectchannel.html - renders moving map based on specified channel.
 
-# CLient Side Collateral (mostly used for testing)
+# Client Side Collateral (mostly used for testing)
 
 * src/base.html - generates map of DGNSS Base Station.
 * src/base.json - JSON datagram for DGNSS Base Station.
@@ -126,9 +126,12 @@ it's running 24x7 on another Raspberry Pi.
 
 # Server Side Collateral
 
-* bin/base.js - fixed channel for DGNSS Base Station location.
 * bin/channel.js - single dynamic channel.
 * bin/controller.js - multiple dynamic channels indexed by host, port, and name.
+
+# Server Side Collateral (mostly used for testing)
+
+* bin/base.js - fixed channel for DGNSS Base Station location.
 * bin/helloworld.js - hello world test server.
 
 # Functional Tests
@@ -241,7 +244,29 @@ geolocation coordinates do not change. This dataset format is used by
 the choosedataset.html and routemap.js client-side programs. The JSON
 array looks like this.
 
-    { "PATH": [ [ 39.7762445, -105.1621035 ], [ 39.7762428, -105.1622863 ], [ 39.7762416, -105.1624700 ], [ 39.7762408, -105.1626533 ], [ 39.7762401, -105.1628366 ], [ 39.7762396, -105.1630200 ] ] }
+    {
+      "PATH": [
+          [ 39.7943158, -105.1533988 ]
+        , [ 39.7943148, -105.1533981 ]
+        , [ 39.7943140, -105.1533973 ]
+        , [ 39.7943136, -105.1533960 ]
+      ]
+    }
+
+Leaflet polyline options (including those in the URL; see below) can be
+overridden by specifying them as additional properties in the JSON file.
+These options will only apply to the route specified in the dataset.
+
+    {
+      "color": "blue",
+      "weight": 6.0,
+      "PATH": [
+          [ 39.7943158, -105.1533988 ]
+        , [ 39.7943148, -105.1533981 ]
+        , [ 39.7943140, -105.1533973 ]
+        , [ 39.7943136, -105.1533960 ]
+      ]
+    }
 
 # Examples
 
@@ -369,37 +394,13 @@ feature will look like this.
 
     http://modelhost/tesoro/choosedataset.html
 
-The format of the dataset looks like this, with the JSON array of
-coordinates specified in the PATH property. (The formatting is what
-is produced by the Hazer csvdataset script.)
-
-    {
-      "PATH": [
-          [ 39.7943158, -105.1533988 ]
-        , [ 39.7943148, -105.1533981 ]
-        , [ 39.7943140, -105.1533973 ]
-        , [ 39.7943136, -105.1533960 ]
-      ]
-    }
-
 Leaflet polyline options like the color of the line or its weight can
-be specified as query paramters in the URL.
+be specified as query paramters in the URL. These change the defaults
+for all routes chosen by the Choose Dataset dialog. The defaults can
+be overridden for one route by options specified in the route dataset
+itself (see above).
 
     http://tesoro/tesoro/choosedataset.html?color=yellow&weight=3
-
-Default polyline options (including those in the URL) can be overridden
-by specifying them as additional properties in the JSON file.
-
-    {
-      "color": "blue",
-      "weight": 6.0,
-      "PATH": [
-          [ 39.7943158, -105.1533988 ]
-        , [ 39.7943148, -105.1533981 ]
-        , [ 39.7943140, -105.1533973 ]
-        , [ 39.7943136, -105.1533960 ]
-      ]
-    }
 
 Multiple routes can be rendered on the same map just by re-choosing
 another dataset on an existing map.
