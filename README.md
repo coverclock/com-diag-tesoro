@@ -502,14 +502,19 @@ repositories for more information on how to do that.
 
 # Articles
 
+Chip Overclock, "A Moving Map Display Using OpenStreetMap", 2021-02,
 <https://coverclock.blogspot.com/2021/02/a-moving-map-display-using.html>
 
+Chip Overclock, "The OpenStreetMap Moving Map In Real-Time", 2021-02,
 <https://coverclock.blogspot.com/2021/02/the-openstreetmap-moving-map-in-real.html>
 
+Chip Overclock, "The OpenStreetMap Moving Map On Mobile Devices", 2021-03,
 <https://coverclock.blogspot.com/2021/03/the-openstreetmap-moving-map-on-mobile.html>
 
+Chip Overclock, "A Static Route Map Display Using OpenStreetMap", 2021-03,
 <https://coverclock.blogspot.com/2021/03/a-static-route-map-display-using.html>
 
+Chip Overclock, "Advanced Static Route Maps With OpenStreetMap", 2021-03,
 <https://coverclock.blogspot.com/2021/03/advanced-static-route-maps-with.html>
 
 # Images
