@@ -210,6 +210,9 @@ of my Hazer work, although I have also used small palmtops and
 netbooks, with Intel Celeron or Intel Atom processors, running
 Ubuntu Mate or Linux Mint.
 
+Rover here is used in the same sense as in Differential GNSS, which
+Hazer also supports.
+
 # Data Formats
 
 There are several data formats used between the Hazer and the Tesoro
@@ -529,6 +532,11 @@ Chip Overclock, "A Static Route Map Display Using OpenStreetMap", 2021-03,
 
 Chip Overclock, "Advanced Static Route Maps With OpenStreetMap", 2021-03,
 <https://coverclock.blogspot.com/2021/03/advanced-static-route-maps-with.html>
+
+(The Hazer repository README has a wealth of other articles I've written about
+my experiments with GPS, GNSS, DGNSS, and IMUs. Similarly, the Diminuto
+repository README has a bunch of articles I've written about systems programming
+in C on various LINUX/GNU platforms.)
 
 # Images
 
