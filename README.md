@@ -331,7 +331,9 @@ visualization browser. The script takes two arguments, a UDP service
 (port) on which to receive datagrams, and a TCP service (port) on which
 to receive HTTP requests via TCP. Since the incoming port uses UDP and
 the outgoing port uses TCP, they can have the same service name and
-number.
+number. As shown above, the command line below assumes I have defined
+the name "tesoro" to be both the UDP and TCP port numbers (for example,
+12345).
 
     fun/channel tesoro tesoro
 
@@ -344,9 +346,9 @@ replacing "modelhost" with the hostname of the tile server. When the
 popup asks for the channel name, type in the URL for the Controller host
 on which the channel script is running
 
-    http://controllerhost:22020/channel.json
+    http://controllerhost:12345/channel.json
 
-where 22020 is the tesoro TCP port number. The JavaScript code will start
+where 12345 is the tesoro TCP port number. The JavaScript code will start
 reading the JSON geolocation data from the channel, and using Leaflet
 to access tiles (map segments) from the OSM tile server, render them,
 creating a moving map display. You can click on the pointer that is
@@ -441,8 +443,8 @@ the same number. Port number values may range from 0 to 65353 and must
 be unique. Linux also assigns "ephemeral" or temporary port numbers
 which will not appear in the /etc/services file.
 
-    tesoro     33333/tcp  # Tesoro JSON source
-    tesoro     33333/udp  # Tesoro JSON sink
+    tesoro     12345/tcp  # Tesoro JSON source
+    tesoro     12345/udp  # Tesoro JSON sink
 
 These web sites explain how to download map data, initially build the
 map database, and update it when necessary. I was careful to place the
