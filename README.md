@@ -76,7 +76,8 @@ and Yodel (integrated GNSS and IMU), the software for both of which
 is also part of the Hazer repository.
 
 Hazer is built on top of another of my projects, Diminuto, a C-based
-systems programming library.
+systems programming library, which is hosted in its own repository,
+and which forms the basis for several other of my C-based projects.
 
 # Platforms
 
