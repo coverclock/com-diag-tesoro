@@ -538,15 +538,13 @@ my experiments with GPS, GNSS, DGNSS, and IMUs. Similarly, the Diminuto
 repository README has a bunch of articles I've written about systems programming
 in C on various LINUX/GNU platforms.)
 
-# Images
+# Albums
 
 <https://flic.kr/s/aHsmTB3tme>
 
-# Videos
+# Playlists
 
-<https://youtu.be/GjR7fPQRCZc>
-
-<https://youtu.be/-6p3w1SxW1A>
+<https://youtube.com/playlist?list=PLd7Yo1333iA9X3D6v1ZAcagGreDCFDB9d>
 
 # Resources
 
