@@ -592,6 +592,8 @@ in C on various LINUX/GNU platforms.)
 
 <https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
 
+<https://jsonlines.org>
+
 # References
 
 D. Flanagan, "JavaScript: The Definitive Guide", 7th edition, O'Reilly, 2020
