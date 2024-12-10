@@ -5,7 +5,7 @@ Client And Server Side JavaScript Using OpenStreetMap (OSM) To Render Maps.
 
 # Copyright
 
-Copyright 2021 by the Digital Aggregates Corporation, Colorado, USA.
+Copyright 2021-2024 by the Digital Aggregates Corporation, Colorado, USA.
 
 # License
 
@@ -146,9 +146,9 @@ it's running 24x7 on another Raspberry Pi.
 # Functional Tests
 
 * fun/channel - calls channel.sh.
-* fun/channel.sh - runs channel.js with node.js.
+* fun/channel.sh - runs channel.js with Node.js.
 * fun/controller - calls controller.sh.
-* fun/controller.sh - runs controller.js with node.js.
+* fun/controller.sh - runs controller.js with Node.js.
 
 # Architecture
 
@@ -335,7 +335,7 @@ format and the number of variables have changed over time. This script
 reflects the CSV format used for the dataset that is the default
 specified in the script for the second (missing) parameter above.
 
-Run the Tesoro "channel" script, which runs the "channel" JavaScrip
+Run the Tesoro "channel" script, which runs the "channel" JavaScript
 program using Node.js), on the Controller host.  This serves as the
 interface between the rover in the field (or the playback that pretends
 to be a rover) and the client-side movingmap program running in the
