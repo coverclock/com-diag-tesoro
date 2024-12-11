@@ -100,6 +100,11 @@ The server-side JavaScript portion of Tesoro has been run on any
 platform I had handy that runs a recent version Node.js. Currently
 it's running 24x7 on another Raspberry Pi.
 
+# Dependencies
+
+    sudo apt-get install nodejs
+    sudo apt-get install npm
+
 # Directories
 
 * bin - contains server-side JavaScript programs to be run under Node.js.
